@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:theme="@style/Theme.SDBVideo"
+    tools:context=".VideoPlayerActivity">
+
+<com.google.android.exoplayer2.ui.PlayerView
+    android:layout_width="match_parent"
+    android:id="@+id/player_view"
+    android:layout_height="match_parent"
+    app:hide_on_touch="true"
+    app:resize_mode="fill"
+    app:player_layout_id="@layout/exo_player_view"
+    app:rewind_increment="1000"
+    app:fastforward_increment="1000"
+    app:surface_type="surface_view"
+    app:controller_layout_id="@layout/custom_playback_view"
+    app:use_controller="true"
+    app:shutter_background_color="#000000"/>
+    <LinearLayout
+        android:id="@+id/layout_lock"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_marginBottom="15dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/unlock"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_outline_lock"
+            android:background="@drawable/bg_icon_in_cicle" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="Ecran Verouiller"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:textSize="12sp"
+            android:text="Toucher pour deverouiller"/>
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layot_speed"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:paddingBottom="5dp"
+        android:visibility="gone"
+        android:background="@drawable/bg_speed"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/close_speed"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_close"
+            android:layout_margin="5dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"/>
+
+        <TextView
+            android:id="@+id/progress_speed_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1X"
+            android:textSize="18sp"
+            android:inputType="textCapSentences"
+            android:textColor="@color/white"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/seekBar"
+            android:layout_marginBottom="2dp"
+            android:layout_marginTop="10dp"/>
+
+        <SeekBar
+            android:id="@+id/seekBar"
+            style="@style/Widget.AppCompat.SeekBar.Discrete"
+            android:layout_width="0dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginLeft="50dp"
+            android:layout_marginTop="15dp"
+            android:progressTint="@color/white"
+            android:thumbTint="@color/white"
+            android:layout_marginRight="50dp"
+            android:layout_height="10dp"
+            android:max="4"
+            android:progress="2" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

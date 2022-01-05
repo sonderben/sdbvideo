@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+
+    android:background="@color/black"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<ImageView
+    android:id="@+id/poster_film"
+    android:layout_width="150dp"
+    android:layout_height="90dp"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintTop_toTopOf="parent"/>
+    <androidx.viewpager.widget.ViewPager
+        android:layout_width="10dp"
+        android:layout_height="1dp"
+        android:background="@android:color/transparent"
+        app:layout_constraintTop_toTopOf="@+id/poster_film"
+        app:layout_constraintLeft_toRightOf="@+id/poster_film"/>
+    <ImageView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_play_circle"
+        app:layout_constraintTop_toTopOf="@+id/poster_film"
+        app:layout_constraintBottom_toBottomOf="@+id/poster_film"
+        app:layout_constraintLeft_toLeftOf="@+id/poster_film"
+        app:layout_constraintRight_toRightOf="@+id/poster_film"/>
+
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+       style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        app:layout_constraintLeft_toLeftOf="@+id/poster_film"
+        app:layout_constraintRight_toRightOf="@+id/poster_film"
+        app:layout_constraintBottom_toBottomOf="@+id/poster_film"/>
+
+    <TextView
+        android:id="@+id/title_film"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="1. Title film"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:gravity="left"
+        app:layout_constraintRight_toLeftOf="@+id/download"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@+id/poster_film"
+        app:layout_constraintLeft_toLeftOf="@+id/poster_film"/>
+    <ImageView
+        android:id="@+id/download"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_download"
+        app:layout_constraintTop_toBottomOf="@+id/poster_film"
+        app:layout_constraintRight_toRightOf="@+id/poster_film"/>
+    <View
+        android:id="@+id/separator"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@color/white"
+        app:layout_constraintLeft_toLeftOf="@+id/poster_film"
+        app:layout_constraintRight_toRightOf="@+id/poster_film"
+        app:layout_constraintTop_toBottomOf="@+id/download"/>
+    <TextView
+        android:id="@+id/duration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="34 mn"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/separator"/>
+    <TextView
+        android:id="@+id/synopsis"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:maxLines="5"
+        android:ellipsize="end"
+        android:textSize="12sp"
+        app:layout_constraintRight_toRightOf="@+id/poster_film"
+        android:text="J'ai l'sang mêlé: un peu colon, un peu coloniséUn peu colombe sombre ou corbeau décoloriséMédine est métissé: Algérien-FrançaisDouble identité: je suis un schizophrène de l'humanité"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/duration"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
