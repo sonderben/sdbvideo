@@ -359,17 +359,18 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         "https://ejemploht.s3.us-east-2.amazonaws.com/Alger+pleur_es.srt",
         "https://ejemploht.s3.us-east-2.amazonaws.com/Alger+pleur_en.srt"};
 
-        for (int a = 0; a < 3; a++)
+        for (int a = 0; a < 3; a++) {
+            if(a<3)
             subtitles.add(new Subtitle(lang[a], url[a]));
+            else
+                subtitles.add(new Subtitle("autre", "1"));
+        }
 
 
         mListViewSubtitle = view.findViewById(R.id.listview_subtitle);
 
-        AdapterSubtitle4PlayerView adapter = new AdapterSubtitle4PlayerView(subtitles, VideoPlayerActivity.this);
-       /* adapter.getView().setOnClickListener(x->{
-            // change subtitle
-            Toast.makeText(VideoPlayerActivity.this,"subtitle clicked",Toast.LENGTH_LONG).show();
-        });*/
+        AdapterSubtitle4PlayerView adapter = new AdapterSubtitle4PlayerView(subtitles, VideoPlayerActivity.this,mConcatenatingMediaSource);
+        mListViewSubtitle.getSelectedItemPosition();
         mListViewSubtitle.setAdapter(adapter);
         return alertDialog;
     }
