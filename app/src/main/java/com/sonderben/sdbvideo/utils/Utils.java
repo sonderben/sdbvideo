@@ -1,7 +1,12 @@
 package com.sonderben.sdbvideo.utils;
 
+import android.app.Activity;
+import android.app.Application;
+import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 
 import java.util.concurrent.TimeUnit;
 
@@ -87,5 +92,10 @@ public class Utils {
 
 
         return stringBuilder.toString();
+    }
+
+    public static void setFullScreen(Activity context) {
+        context.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        context.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 }

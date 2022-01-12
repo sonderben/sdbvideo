@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.sonderben.sdbvideo.ui.login.LoginActivity;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -14,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         findViewById(R.id.btn).setOnClickListener(x->{
-            Intent intent=new Intent(this,VideoPlayerActivity.class);
+            Intent intent=new Intent(this, LoginActivity.class);
             startActivity(intent);
         });
     }

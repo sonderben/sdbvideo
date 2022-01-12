@@ -37,6 +37,7 @@ import com.sonderben.sdbvideo.adapter.AdapterEpo4PlayerView;
 import com.sonderben.sdbvideo.adapter.AdapterSubtitle4PlayerView;
 import com.sonderben.sdbvideo.entity.Episode;
 import com.sonderben.sdbvideo.entity.Subtitle;
+import com.sonderben.sdbvideo.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +46,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setFullScreen();
+        Utils.setFullScreen(this);
         setContentView(R.layout.activity_video_player);
         mCustomPlaybackView = findViewById(R.id.custom_playback_view);
         mPlayerView = findViewById(R.id.player_view);
@@ -104,10 +105,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-    private void setFullScreen() {
+   /* private void setFullScreen() {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }
+    }*/
     private void playVideo2() {
         mSimpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
         Uri uriVideo = Uri.parse("https://ejemploht.s3.us-east-2.amazonaws.com/M%C3%A9dine+-+Alger+Pleure.mkv");
