@@ -8,19 +8,19 @@ import androidx.lifecycle.ViewModel;
 
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.data.UserRepository;
-import com.sonderben.sdbvideo.data.model.User;
+import com.sonderben.sdbvideo.data.model.UserLogin;
 
 import retrofit2.Call;
 
 public class LoginViewModel extends ViewModel {
 
-    private MutableLiveData<User> loginFormState = new MutableLiveData<>();
+    private MutableLiveData<UserLogin> loginFormState = new MutableLiveData<>();
    // private MutableLiveData<LoginResult> loginResult = new MutableLiveData<>();
 
 
 
 
-    LiveData<User> getLoginFormState() {
+    LiveData<UserLogin> getLoginFormState() {
         return loginFormState;
     }
 
@@ -28,7 +28,7 @@ public class LoginViewModel extends ViewModel {
 
 
     public void loginDataChanged(String username, String password) {
-            loginFormState.setValue(new User(username,password));
+            loginFormState.setValue(new UserLogin(username,password));
 
     }
 

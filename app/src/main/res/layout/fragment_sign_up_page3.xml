@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@mipmap/bg_app"
+    android:layout_height="match_parent"
+    tools:context=".ui.sign_up.SignUpPage3Fragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+            <DatePicker
+                android:id="@+id/date_picker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/light_blue_600"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:drawableTint="#A8A4A4"
+                android:spinnersShown="true"
+                android:calendarViewShown="false"
+                android:datePickerMode="spinner"
+                android:paddingLeft="@dimen/_5sdp"
+                android:selectAllOnFocus="true"
+                android:background="@drawable/bg_et"
+                android:textSize="@dimen/_18sdp"
+                android:textColorHint="#A8A4A4"
+                android:inputType="textEmailAddress"
+                android:drawableLeft="@drawable/ic_email_24"
+                android:hint="@string/prompt_email"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="#A8A4A4"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_sex_24" />
+                <Spinner
+                    android:id="@+id/spinner_gender"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</RelativeLayout>

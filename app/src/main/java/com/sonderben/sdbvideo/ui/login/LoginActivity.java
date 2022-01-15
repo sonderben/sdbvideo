@@ -27,9 +27,13 @@ import android.widget.Toast;
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.VideoPlayerActivity;
 import com.sonderben.sdbvideo.data.UserRepository;
-import com.sonderben.sdbvideo.data.model.User;
+import com.sonderben.sdbvideo.data.model.UserLogin;
 import com.sonderben.sdbvideo.databinding.ActivityLoginBinding;
+import com.sonderben.sdbvideo.ui.sign_up.SignUpActivity;
 import com.sonderben.sdbvideo.utils.Preferences;
+import com.sonderben.sdbvideo.utils.Utils;
+
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
+    private  TextView signup;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,11 @@ public class LoginActivity extends AppCompatActivity {
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
         final ProgressBar loadingProgressBar = binding.loading;
+        signup=binding.signup;
+        signup.setOnClickListener(x->{
+            Intent intent=new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+        });
 
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
@@ -109,27 +119,36 @@ public class LoginActivity extends AppCompatActivity {
 
     private void a(String email, String pwd, String device, String location) {
         Retrofit retrofit = new Retrofit.Builder()//192.168.0.103
-                .baseUrl("http://192.168.0.103:8080/api/v1/")
+                .baseUrl(Utils.baseurl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         UserRepository userRepository = retrofit.create(UserRepository.class);
-        Call<User.Response> call = userRepository.login(email, pwd, device, location);
-        call.enqueue(new Callback<User.Response>() {
+        Call<UserLogin.Response> call = userRepository.login(new UserLogin(email, pwd, device, location));
+        call.enqueue(new Callback<UserLogin.Response>() {
             @Override
-            public void onResponse(Call<User.Response> call, Response<User.Response> response) {
-               User.Response g= response.body();
-                Toast.makeText(LoginActivity.this, "Login with success" , Toast.LENGTH_LONG).show();
-                 Preferences.getPreferenceInstance(LoginActivity.this).setTokenPreferences(response.body().getToken());
+            public void onResponse(Call<UserLogin.Response> call, Response<UserLogin.Response> response) {
+                if(response.isSuccessful()){
+                    UserLogin.Response g= response.body();
+                    Toast.makeText(LoginActivity.this, "Login :"+g , Toast.LENGTH_LONG).show();
+                    //Preferences.getPreferenceInstance(LoginActivity.this).setTokenPreferences(response.body().getToken());
 
-                Intent intent=new Intent(LoginActivity.this, VideoPlayerActivity.class);
-                startActivity(intent);
+                    Intent intent=new Intent(LoginActivity.this, VideoPlayerActivity.class);
+                    startActivity(intent);
+                }
+                else {
+                    try {
+                        JSONObject jsonError=new JSONObject(response.errorBody().string());
+                        int status=jsonError.getInt("status");
+                        String message= jsonError.getString("error");
+                        Toast.makeText(LoginActivity.this, message+". error: "+status , Toast.LENGTH_LONG).show();
+                    }catch (Exception e){}
+                }
             }
 
             @Override
-            public void onFailure(Call<User.Response> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "" + t.getMessage(), Toast.LENGTH_LONG).show();
-                System.err.println("u malll");
-                Log.i("mitag", "" + t.getMessage());
+            public void onFailure(Call<UserLogin.Response> call, Throwable t) {
+
+
             }
         });
     }

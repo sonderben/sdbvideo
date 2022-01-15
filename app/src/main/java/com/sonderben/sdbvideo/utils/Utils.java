@@ -3,6 +3,7 @@ package com.sonderben.sdbvideo.utils;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -10,7 +11,15 @@ import android.view.WindowManager;
 
 import java.util.concurrent.TimeUnit;
 
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 public class Utils {
+
+    public final static String ip="192.168.0.101";
+    //192.168.0.101
+    public final static String baseurl="http://"+ip+":8080/api/v1/";
+    private final static String baseUrlCountryStateCity="https://api.countrystatecity.in/v1/";
     public static void setEnableViewGroup(View searchView, boolean b) {
         searchView.setEnabled(b);
         if (searchView instanceof ViewGroup) {
@@ -22,6 +31,8 @@ public class Utils {
             }
         }
     }
+    public static volatile Retrofit retrofit;
+    public static volatile Retrofit retrofit2;
 
     public static void setVisibleChildGroup(View searchView, int visibility) {
         //searchView.setEnabled(b);
@@ -97,5 +108,45 @@ public class Utils {
     public static void setFullScreen(Activity context) {
         context.requestWindowFeature(Window.FEATURE_NO_TITLE);
         context.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+    }
+
+    public static boolean isEmailValid(String email) {
+        if (email == null) {
+            return false;
+        }
+       // if (email.contains("@")) {
+            return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        /*} /*else {
+            return email.trim().isEmpty();
+        }*/
+    }
+    public static boolean isNameValid(String email) {
+        if (email == null) {
+            return false;
+        }
+        // if (email.contains("@")) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        /*} /*else {
+            return email.trim().isEmpty();
+        }*/
+    }
+
+    public static Retrofit getInstanceRetrofitCountryStateCity(){
+        if(retrofit==null) {
+            retrofit = new Retrofit.Builder()
+                    .baseUrl(baseUrlCountryStateCity)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit;
+    }
+    public static Retrofit getInstanceRetrofit(){
+        if(retrofit2==null) {
+            retrofit2 = new Retrofit.Builder()
+                    .baseUrl(baseurl)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+        }
+        return retrofit2;
     }
 }

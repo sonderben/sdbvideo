@@ -34,11 +34,12 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         Intent intent;
         //if(preferences.getToken().isEmpty()){
-            intent=new Intent(SplashScreenActivity.this, ChooseProfileActivity.class);
+        //    intent=new Intent(SplashScreenActivity.this, ChooseProfileActivity.class);
        // }
-        /*else{
-            intent=new Intent(SplashScreenActivity.this,MainActivity.class);
-        }*/
+       // else{
+        //    intent=new Intent(SplashScreenActivity.this,MainActivity.class);
+       // }
+        intent=new Intent(SplashScreenActivity.this,LoginActivity.class);
 
 
 
@@ -46,9 +47,9 @@ public class SplashScreenActivity extends AppCompatActivity {
             @Override
             public void run() {
                 startActivity(intent);
-                //SplashScreenActivity.this.finish();
+                SplashScreenActivity.this.finish();
             }
-        }, 2000);
+        }, 200);
 
 
     }

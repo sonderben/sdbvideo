@@ -14,6 +14,15 @@
     <string name="login_failed">"Login failed"</string>
     <string name="u_dnt_have_account">You don\'t have an account?</string>
     <string name="sign_up">Sign up</string>
-    <string name="did_u_forget_pwd">Did you forget your password</string>
+    <string name="did_u_forget_pwd">Did you forget your password?</string>
     <string name="who_is_it">Who is it?</string>
+    <string name="remember_me">Remember me</string>
+    <string name="prompt_first_name">First name</string>
+    <string name="prompt_last_name">Last name</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="prompt_phone">Telephone</string>
+    <string name="prompt_postal_code">Postal code</string>
+    <string name="prev_page">Prev.</string>
+    <string name="next_page">Next</string>
 </resources>

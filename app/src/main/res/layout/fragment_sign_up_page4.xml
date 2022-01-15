@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@mipmap/bg_app"
+    tools:context=".ui.sign_up.SignUpPage4Fragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="#A8A4A4"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_email_24" />
+                <Spinner
+                    android:id="@+id/spin_country"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="#A8A4A4"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_email_24" />
+                <Spinner
+                    android:id="@+id/spin_state"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="#A8A4A4"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_email_24" />
+                <Spinner
+                    android:id="@+id/spin_city"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+            </LinearLayout>
+            <EditText
+                android:id="@+id/region"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:drawableTint="#A8A4A4"
+                android:drawableLeft="@drawable/ic_directions_24"
+                android:hint="Street optional"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et"/>
+            <EditText
+                android:id="@+id/postal_code"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/light_blue_600"
+                android:minHeight="@dimen/_36sdp"
+                android:drawableTint="#A8A4A4"
+                android:paddingLeft="@dimen/_5sdp"
+                android:selectAllOnFocus="true"
+                android:background="@drawable/bg_et"
+                android:textColorHint="#A8A4A4"
+                android:inputType="text"
+                android:drawableLeft="@drawable/ic_email_24"
+                android:hint="@string/prompt_postal_code"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFCC00"
+                android:visibility="gone"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:text="No valid postal code"/>
+
+           <androidx.constraintlayout.widget.ConstraintLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:background="@drawable/bg_et"
+               android:minHeight="@dimen/_36sdp"
+               android:layout_marginTop="@dimen/_10sdp"
+               android:layout_marginBottom="@dimen/_10sdp"
+               android:layout_marginRight="@dimen/_10sdp"
+               android:layout_marginLeft="@dimen/_10sdp">
+               <ImageView
+                   android:id="@+id/drawable_phone"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   app:tint="#A8A4A4"
+                   android:textColor="@color/light_blue_600"
+                   android:layout_marginLeft="@dimen/_5sdp"
+                   app:layout_constraintLeft_toLeftOf="parent"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   android:src="@drawable/ic_phone_24"
+                   android:drawableLeft="@drawable/ic_phone_24"
+                   android:text="No valid password"/>
+               <EditText
+                   android:id="@+id/phone_code"
+                   android:layout_width="wrap_content"
+                   android:layout_height="match_parent"
+                   android:text="+509"
+                   android:textColor="#A8A4A4"
+                   android:backgroundTint="@color/white"
+                   android:layout_marginLeft="@dimen/_2sdp"
+                   app:layout_constraintLeft_toRightOf="@+id/drawable_phone"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"/>
+               <TextView
+                   android:id="@+id/separator"
+                   android:layout_marginLeft="@dimen/_2sdp"
+                   android:layout_marginTop="@dimen/_7sdp"
+                   android:layout_marginBottom="@dimen/_7sdp"
+                   android:layout_width="@dimen/_1sdp"
+                   android:background="#A8A4A4"
+                   app:layout_constraintTop_toTopOf="parent"
+                   app:layout_constraintBottom_toBottomOf="parent"
+                   app:layout_constraintLeft_toRightOf="@+id/phone_code"
+                   android:layout_height="0dp"/>
+               <EditText
+                   android:id="@+id/telephone"
+                   android:layout_width="0dp"
+                   android:layout_height="match_parent"
+                   android:layout_marginLeft="@dimen/_2sdp"
+                   android:hint="@string/prompt_phone"
+                   android:inputType="numberPassword"
+                   android:textColorHint="#A8A4A4"
+                   android:textColor="@color/light_blue_600"
+                   android:backgroundTint="@color/white"
+                   app:layout_constraintStart_toEndOf="@+id/separator"
+                   app:layout_constraintEnd_toEndOf="parent"/>
+           </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+    <ProgressBar
+        android:id="@+id/pregress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"/>
+
+</RelativeLayout>

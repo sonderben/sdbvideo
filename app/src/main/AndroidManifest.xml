@@ -12,7 +12,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SDBVideo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.choose_profile.ChooseProfileActivity"></activity>
+        <activity android:name=".ui.sign_up.SignUpActivity"></activity>
+        <activity android:name=".ui.choose_profile.ChooseProfileActivity" />
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true">

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@mipmap/bg_app"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.sign_up.SignUpPage5Fragment">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <CheckBox
+                android:id="@+id/can_create_profile"
+                android:layout_width="match_parent"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:textColor="@color/light_blue_600"
+                android:text="All profiles can create new Profiles"
+                android:layout_height="wrap_content"/>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/_36sdp"
+                android:background="@drawable/bg_et"
+                android:paddingLeft="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/light_blue_600"
+                    android:minHeight="@dimen/_36sdp"
+                    android:drawableTint="#A8A4A4"
+                    android:selectAllOnFocus="true"
+
+                    android:textSize="@dimen/_18sdp"
+                    android:textColorHint="#A8A4A4"
+                    android:inputType="textPassword"
+                    android:drawableLeft="@drawable/ic_lock"
+                    android:hint="@string/prompt_password"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:textColorHint="#A8A4A4"
+                    android:drawableTint="#A8A4A4"
+                    android:drawableRight="@drawable/ic_eye_24"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_et"
+                android:paddingLeft="@dimen/_5sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:orientation="horizontal">
+                <EditText
+                    android:id="@+id/confirmPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:backgroundTint="@color/white"
+                    android:textColor="@color/light_blue_600"
+                    android:minHeight="@dimen/_36sdp"
+                    android:drawableTint="#A8A4A4"
+                    android:selectAllOnFocus="true"
+
+                    android:textSize="@dimen/_18sdp"
+                    android:textColorHint="#A8A4A4"
+                    android:inputType="textPassword"
+                    android:drawableLeft="@drawable/ic_lock"
+                    android:hint="@string/prompt_password"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginRight="@dimen/_10sdp"
+                    android:textColorHint="#A8A4A4"
+                    android:drawableTint="#A8A4A4"
+                    android:drawableRight="@drawable/ic_eye_24"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+</RelativeLayout>

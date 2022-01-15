@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_app"
+    tools:context=".ui.sign_up.SignUpPage1Fragment">
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:layout_marginBottom="@dimen/_1sdp"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableTint="#A8A4A4"
+                    android:layout_gravity="center"
+                    android:drawableLeft="@drawable/ic_email_24" />
+                <Spinner
+                    android:id="@+id/spin_access"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"/>
+
+            </LinearLayout>
+            <EditText
+                android:id="@+id/info_access"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_30sdp"
+                android:paddingLeft="@dimen/_15sdp"
+                android:textColor="#31708f"
+                android:editable="false"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:background="@drawable/bg_et"
+                android:text="name: free \n number of profile: 1\n Pub: yes"/>
+
+            <EditText
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:backgroundTint="@color/white"
+                android:textColor="@color/light_blue_600"
+                android:minHeight="@dimen/_36sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:drawableTint="#A8A4A4"
+                android:paddingLeft="@dimen/_5sdp"
+                android:selectAllOnFocus="true"
+                android:background="@drawable/bg_et"
+                android:textSize="@dimen/_18sdp"
+                android:textColorHint="#A8A4A4"
+                android:inputType="textEmailAddress"
+                android:drawableLeft="@drawable/ic_email_24"
+                android:hint="@string/prompt_email"/>
+            <TextView
+                android:id="@+id/info_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFCC00"
+                android:visibility="invisible"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:text="No valid email"/>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"/>
+
+
+</RelativeLayout>
