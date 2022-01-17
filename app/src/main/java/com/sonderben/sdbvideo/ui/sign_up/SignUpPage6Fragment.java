@@ -1,15 +1,23 @@
 package com.sonderben.sdbvideo.ui.sign_up;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.android.material.button.MaterialButton;
 import com.sonderben.sdbvideo.R;
+import com.sonderben.sdbvideo.data.model.Access;
+import com.sonderben.sdbvideo.data.model.User;
 import com.sonderben.sdbvideo.databinding.FragmentSignUpPage6Binding;
 
 
@@ -51,9 +59,27 @@ public class SignUpPage6Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding=FragmentSignUpPage6Binding.inflate(getLayoutInflater());
         View root=binding.getRoot();
+        plan=binding.plan;
+        email=binding.email;
+        price=binding.planPrice;
+        firsName=binding.firstName;
+        lastName=binding.lastName;
+        birthday=binding.birthday;
+        sex=binding.sex;
+        country=binding.country;
+        state=binding.region;
+        city=binding.city;
+        postal=binding.postalCode;
+        phone=binding.telephone;
+        password=binding.password;
+
 
        return root;
     }
+    User user=new User();
     FragmentSignUpPage6Binding binding;
+
+
+    TextView plan,email,price,firsName,lastName,birthday,sex,country,state,city,postal,phone,password;
 
 }

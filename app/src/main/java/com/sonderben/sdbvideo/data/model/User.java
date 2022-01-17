@@ -3,7 +3,6 @@ package com.sonderben.sdbvideo.data.model;
 import java.util.Calendar;
 
 public class User {
-    Long id;
     Access access;
     boolean allProfilesCanCreateNewProfile;
     String email;
@@ -36,13 +35,7 @@ public class User {
         birthday="2004 01 01";
         region="";
     }
-    public Long getId() {
-        return id;
-    }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public Access geAccess() {
         return access;
@@ -127,7 +120,6 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
                 ", access=" + access +
                 ", allProfilesCanCreateNewProfile=" + allProfilesCanCreateNewProfile +
                 ", email='" + email + '\'' +
@@ -169,11 +161,11 @@ public class User {
         this.password = password;
     }
 
-    public User(Long id, Access access, boolean allProfilesCanCreateNewProfile, String email,
+    public User( Access access, boolean allProfilesCanCreateNewProfile, String email,
                 String firstName, String lastName, String birthday, String telephone,
                 String country, String region, String city, String department, String postalCode,
                 String password, String sex) {
-        this.id = id;
+
         this.access = access;
         this.allProfilesCanCreateNewProfile = allProfilesCanCreateNewProfile;
         this.email = email;

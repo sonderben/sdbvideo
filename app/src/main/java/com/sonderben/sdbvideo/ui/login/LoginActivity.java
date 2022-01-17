@@ -1,20 +1,16 @@
 package com.sonderben.sdbvideo.ui.login;
 
-import android.app.Activity;
-
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -24,12 +20,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.sonderben.sdbvideo.R;
+import com.sonderben.sdbvideo.MainActivity2;
 import com.sonderben.sdbvideo.VideoPlayerActivity;
 import com.sonderben.sdbvideo.data.UserRepository;
 import com.sonderben.sdbvideo.data.model.UserLogin;
 import com.sonderben.sdbvideo.databinding.ActivityLoginBinding;
-import com.sonderben.sdbvideo.ui.sign_up.SignUpActivity;
+import com.sonderben.sdbvideo.ui.choose_profile.ChooseProfileActivity;
+import com.sonderben.sdbvideo.ui.choose_profile.EditProfileActivity;
 import com.sonderben.sdbvideo.utils.Preferences;
 import com.sonderben.sdbvideo.utils.Utils;
 
@@ -46,6 +43,8 @@ public class LoginActivity extends AppCompatActivity {
     private LoginViewModel loginViewModel;
     private ActivityLoginBinding binding;
     private  TextView signup;
+    String tempEmail;
+    ProgressBar loadingProgressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,10 +60,11 @@ public class LoginActivity extends AppCompatActivity {
         final EditText usernameEditText = binding.username;
         final EditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
-        final ProgressBar loadingProgressBar = binding.loading;
+          loadingProgressBar = binding.loading;
         signup=binding.signup;
         signup.setOnClickListener(x->{
-            Intent intent=new Intent(LoginActivity.this, SignUpActivity.class);
+            //Intent intent=new Intent(LoginActivity.this, SignUpActivity.class);
+            Intent intent=new Intent(LoginActivity.this, EditProfileActivity.class);
             startActivity(intent);
         });
 
@@ -101,23 +101,19 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         loginButton.setEnabled(true);
-        loginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               /* loadingProgressBar.setVisibility(View.VISIBLE);
-                loginViewModel.login(usernameEditText.getText().toString(),
-                        passwordEditText.getText().toString());*/
-                a(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
-                        "device", "location");
-            }
+        loginButton.setOnClickListener(v -> {
+            loadingProgressBar.setVisibility(View.VISIBLE);
+            login(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
+                    "device", "location");
         });
+        tempEmail=usernameEditText.getText().toString();
     }
 
     private void updateUiWithUser() {
 
     }
 
-    private void a(String email, String pwd, String device, String location) {
+    private void login(String email, String pwd, String device, String location) {
         Retrofit retrofit = new Retrofit.Builder()//192.168.0.103
                 .baseUrl(Utils.baseurl)
                 .addConverterFactory(GsonConverterFactory.create())
@@ -128,11 +124,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<UserLogin.Response> call, Response<UserLogin.Response> response) {
                 if(response.isSuccessful()){
-                    UserLogin.Response g= response.body();
-                    Toast.makeText(LoginActivity.this, "Login :"+g , Toast.LENGTH_LONG).show();
-                    //Preferences.getPreferenceInstance(LoginActivity.this).setTokenPreferences(response.body().getToken());
 
-                    Intent intent=new Intent(LoginActivity.this, VideoPlayerActivity.class);
+                    UserLogin.Response g= response.body();
+
+                    Preferences preferences=Preferences.getPreferenceInstance(LoginActivity.this);
+                    preferences.setTokenPreferences(g.getToken());
+                    preferences.setEmailUserPreferences(tempEmail);
+                   // new AlertDialog.Builder(LoginActivity.this).setMessage(preferences.getToken()+" token").show();
+
+                    loadingProgressBar.setVisibility(View.INVISIBLE);
+                    Intent intent=new Intent(LoginActivity.this, ChooseProfileActivity.class);
+
+                    intent.putExtra("Activity",1);
                     startActivity(intent);
                 }
                 else {

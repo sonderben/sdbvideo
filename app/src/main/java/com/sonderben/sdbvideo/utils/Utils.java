@@ -149,4 +149,9 @@ public class Utils {
         }
         return retrofit2;
     }
+    public static void signOut(Context context){
+        Preferences preferences=Preferences.getPreferenceInstance(context);
+        preferences.setTokenPreferences("");
+        preferences.setIdProfile(-1L);
+    }
 }

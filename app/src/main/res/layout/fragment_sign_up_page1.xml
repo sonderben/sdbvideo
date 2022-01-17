@@ -64,6 +64,7 @@
                 android:layout_marginTop="@dimen/_10sdp"
                 android:drawableTint="#A8A4A4"
                 android:paddingLeft="@dimen/_5sdp"
+                android:text="sonderben@gmail.com"
                 android:selectAllOnFocus="true"
                 android:background="@drawable/bg_et"
                 android:textSize="@dimen/_18sdp"

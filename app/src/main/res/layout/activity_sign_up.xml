@@ -11,7 +11,7 @@
         android:id="@+id/tv_sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_5sdp"
         android:text="SIGN UP"
         android:textAlignment="center"
         android:textColor="@color/white"

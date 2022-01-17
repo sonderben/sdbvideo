@@ -110,10 +110,10 @@ public class SignUpPage4Fragment extends Fragment  {
 
                     spinnerCity.setEnabled(true);
                     getCitiesWithinCountryAndState(
-                            countryList.get( spinnerCountry.getSelectedItemPosition()-1).getIso2(),
+                            countryList.get( spinnerState.getSelectedItemPosition()-1).getIso2(),
                             stateList.get(i-1).getIso2()
                     );
-                    intent.putExtra("DEPARTMENT",(String)spinnerCountry.getSelectedItem());
+                    intent.putExtra("DEPARTMENT",(String)spinnerState.getSelectedItem());
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
 
                 }
@@ -131,7 +131,7 @@ public class SignUpPage4Fragment extends Fragment  {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 if (i>0){
-                    intent.putExtra("CITY",(String)spinnerCountry.getSelectedItem());
+                    intent.putExtra("CITY",(String)spinnerCity.getSelectedItem());
                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
                 }
             }
@@ -336,6 +336,8 @@ public class SignUpPage4Fragment extends Fragment  {
                     List<Country.City> states=response.body();
                     cityList=states;
                     String []accessName=new String[states.size()+1];
+                    Toast.makeText(SignUpPage4Fragment.this.getContext(),"size: "
+                            +accessName.length,Toast.LENGTH_LONG).show();
                     accessName[0]="Choose a City".toUpperCase();
                     for (int a=0;a<states.size();a++){
                         accessName[a+1]=states.get(a).getName().toUpperCase();

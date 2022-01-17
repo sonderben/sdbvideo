@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 public class Preferences {
     private static SharedPreferences tokenPreferences;
     private static SharedPreferences idProfilePreferences;
+    private static SharedPreferences emailUserPreferences;
 
 
     private Context context;
@@ -16,6 +17,7 @@ public class Preferences {
         this.context = context;
         tokenPreferences= context.getSharedPreferences("TOKEN",Context.MODE_PRIVATE);
         idProfilePreferences= context.getSharedPreferences("ID_PROFILE",context.MODE_PRIVATE);
+        emailUserPreferences= context.getSharedPreferences("EMAIL_USER",Context.MODE_PRIVATE);
     }
     public static Preferences getPreferenceInstance(Context context){
         if(preferences==null){
@@ -40,7 +42,17 @@ public class Preferences {
         editor.apply();
         editor.commit();
     }
-    public Long getId(){
+    public Long getIdProfile(){
         return tokenPreferences.getLong("ID_PROFILE",0L);
+    }
+
+    public  void setEmailUserPreferences(String email){
+        SharedPreferences.Editor editor=emailUserPreferences.edit();
+        editor.putString("EMAIL_USER", email);
+        editor.apply();
+        editor.commit();
+    }
+    public String getEmailUser(){
+        return emailUserPreferences.getString("EMAIL_USER","");
     }
 }

@@ -12,7 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SDBVideo"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.sign_up.SignUpActivity"></activity>
+        <activity android:name=".ui.choose_profile.EditProfileActivity"></activity>
+        <activity
+            android:name=".MainActivity2"
+            android:label="@string/title_activity_main2" />
+        <activity android:name=".ui.sign_up.SignUpActivity" />
         <activity android:name=".ui.choose_profile.ChooseProfileActivity" />
         <activity
             android:name=".SplashScreenActivity"

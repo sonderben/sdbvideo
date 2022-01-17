@@ -33,13 +33,17 @@ public class SplashScreenActivity extends AppCompatActivity {
 
 
         Intent intent;
-        //if(preferences.getToken().isEmpty()){
-        //    intent=new Intent(SplashScreenActivity.this, ChooseProfileActivity.class);
-       // }
-       // else{
-        //    intent=new Intent(SplashScreenActivity.this,MainActivity.class);
-       // }
-        intent=new Intent(SplashScreenActivity.this,LoginActivity.class);
+        if(preferences.getToken().length()>8){
+            if (preferences.getIdProfile() == null||preferences.getIdProfile()==0) {
+                intent=new Intent(SplashScreenActivity.this, ChooseProfileActivity.class);
+            }
+            else
+            intent=new Intent(SplashScreenActivity.this, MainActivity2.class);
+        }
+        else{
+            intent=new Intent(SplashScreenActivity.this,LoginActivity.class);
+        }
+        //intent=new Intent(SplashScreenActivity.this,LoginActivity.class);
 
 
 

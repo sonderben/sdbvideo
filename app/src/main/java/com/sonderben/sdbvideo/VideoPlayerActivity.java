@@ -61,7 +61,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         mUnlock = findViewById(R.id.unlock);
         mEpo = findViewById(R.id.epo);
         mSubtitle = findViewById(R.id.sub);
-        playVideo();
+
+        String urlFilm=getIntent().getStringExtra("URL_FILM");
+        playVideo2(urlFilm);
 
         mPlaybackParameters = new PlaybackParameters(1f);
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
@@ -109,9 +111,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }*/
-    private void playVideo2() {
+    private void playVideo2(String url) {
         mSimpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
-        Uri uriVideo = Uri.parse("https://ejemploht.s3.us-east-2.amazonaws.com/M%C3%A9dine+-+Alger+Pleure.mkv");
+        Uri uriVideo = Uri.parse(url);
         DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(
                 this, "app"
         ));

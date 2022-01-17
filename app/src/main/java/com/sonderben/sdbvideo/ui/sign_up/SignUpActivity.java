@@ -25,6 +25,7 @@ import com.sonderben.sdbvideo.data.model.ResponseSignUp;
 import com.sonderben.sdbvideo.data.model.User;
 import com.sonderben.sdbvideo.databinding.ActivitySignUpBinding;
 import com.sonderben.sdbvideo.repository.UserSignUpRepository;
+import com.sonderben.sdbvideo.utils.Preferences;
 import com.sonderben.sdbvideo.utils.Utils;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
 
@@ -33,36 +34,45 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
+public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     ActivitySignUpBinding signUpBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        signUpBinding=ActivitySignUpBinding.inflate(getLayoutInflater());
+        signUpBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(signUpBinding.getRoot());
-           viewPager2=signUpBinding.viewPager2;
-         final TextView nextPage=signUpBinding.nextPage;
-        final TextView previousPage=signUpBinding.previousPage;
-        signIn=signUpBinding.signIn;
-        final SpringDotsIndicator springDotsIndicator =signUpBinding.springDotsIndicator;
-         adapterViewPager4SignUp = new AdapterViewPager4SignUp(this);
-         viewPager2.setAdapter(adapterViewPager4SignUp);
+        viewPager2 = signUpBinding.viewPager2;
+        final TextView nextPage = signUpBinding.nextPage;
+        final TextView previousPage = signUpBinding.previousPage;
+        signIn = signUpBinding.signIn;
+        final SpringDotsIndicator springDotsIndicator = signUpBinding.springDotsIndicator;
+        adapterViewPager4SignUp = new AdapterViewPager4SignUp(this);
+        viewPager2.setAdapter(adapterViewPager4SignUp);
         springDotsIndicator.setViewPager2(viewPager2);
-         viewPager2.setUserInputEnabled(false);
+        viewPager2.setUserInputEnabled(false);
+        preferences= Preferences.getPreferenceInstance(this);
 
-         signIn.setOnClickListener(new View.OnClickListener() {
-             @Override
-             public void onClick(View view) {
-                 System.out.println(user);
-                 System.err.println(user);
-                 Log.i("userm",""+user);
+        signIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println(user);
+                System.err.println(user);
+                Log.i("userm", "" + user);
 
-                 signUp(user);
+                if (userIsValid(user)) {
+                    signUp(user);
+                    preferences.setEmailUserPreferences(user.getEmail());
+                }
+                 /*new AlertDialog.Builder(SignUpActivity.this)
+                         .setTitle("Delete entry")
+                         .setMessage(""+user)
+
+                         .show();*/
 
 
-             }
-         });
+            }
+        });
 
 
         nextPage.setOnClickListener(this::onClick);
@@ -70,80 +80,81 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         viewPager2.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                if(position>0){
+                if (position > 0) {
                     previousPage.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     previousPage.setVisibility(View.INVISIBLE);
                 }
-                if(position<adapterViewPager4SignUp.getItemCount()-1 /*&& Utils.isEmailValid(mEmail)*/){
+                if (position < adapterViewPager4SignUp.getItemCount() - 1 /*&& Utils.isEmailValid(mEmail)*/) {
                     nextPage.setVisibility(View.VISIBLE);
-                }
-                else {
+                } else {
                     nextPage.setVisibility(View.INVISIBLE);
                 }
-                if(position==adapterViewPager4SignUp.getItemCount()-1)
+                if (position == adapterViewPager4SignUp.getItemCount() - 1)
                     signIn.setVisibility(View.VISIBLE);
                 else
                     signIn.setVisibility(View.GONE);
             }
         });
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,new IntentFilter("SIGN_UP"));
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("SIGN_UP"));
     }
 
 
     ViewPager2 viewPager2;
     AdapterViewPager4SignUp adapterViewPager4SignUp;
-    User user=new User();
+    User user = new User();
     MaterialButton signIn;
+    Preferences preferences;
+
     @Override
     public void onClick(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.next_page:
-                if(viewPager2.getCurrentItem()<adapterViewPager4SignUp.getItemCount()-1) {
+                if (viewPager2.getCurrentItem() < adapterViewPager4SignUp.getItemCount() - 1) {
                     viewPager2.setCurrentItem(viewPager2.getCurrentItem() + 1);
                 }
                 break;
             case R.id.previous_page:
-                if(viewPager2.getCurrentItem()>=1) {
+                if (viewPager2.getCurrentItem() >= 1) {
                     viewPager2.setCurrentItem(viewPager2.getCurrentItem() - 1);
                 }
                 break;
         }
     }
-    BroadcastReceiver broadcastReceiver=new BroadcastReceiver() {
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            if(intent.getAction().equals("SIGN_UP")){
+            if (intent.getAction().equals("SIGN_UP")) {
 
-                if(intent.getLongExtra("ID_ACCESS",0)!=0 )
-                    user.setAccess(new Access(intent.getLongExtra("ID_ACCESS",0)));
-                if(intent.getStringExtra("EMAIL")!=null )
+                if (intent.getLongExtra("ID_ACCESS", 0) != 0)
+                    user.setAccess(new Access(intent.getLongExtra("ID_ACCESS", 0)));
+                if (intent.getStringExtra("EMAIL") != null)
                     user.setEmail(intent.getStringExtra("EMAIL"));
-                if(intent.getStringExtra("FIRST_NAME")!=null )
+                if (intent.getStringExtra("FIRST_NAME") != null)
                     user.setFirstName(intent.getStringExtra("FIRST_NAME"));
-                if(intent.getStringExtra("LAST_NAME")!=null )
+                if (intent.getStringExtra("LAST_NAME") != null)
                     user.setLastName(intent.getStringExtra("LAST_NAME"));
-                if(intent.getStringExtra("BIRTHDAY")!=null )
+                if (intent.getStringExtra("BIRTHDAY") != null)
                     user.setBirthday(intent.getStringExtra("BIRTHDAY"));
-                if(intent.getStringExtra("SEX")!=null )
+                if (intent.getStringExtra("SEX") != null)
                     user.setSex(intent.getStringExtra("SEX"));
-                if(intent.getStringExtra("TELEPHONE")!=null )
+                if (intent.getStringExtra("TELEPHONE") != null)
                     user.setTelephone(intent.getStringExtra("TELEPHONE"));
-                if(intent.getStringExtra("REGION")!=null )
+                if (intent.getStringExtra("REGION") != null)
                     user.setRegion(intent.getStringExtra("REGION"));
-                if(intent.getStringExtra("CITY")!=null )
+                if (intent.getStringExtra("CITY") != null)
                     user.setCity(intent.getStringExtra("CITY"));
-                if(intent.getStringExtra("COUNTRY")!=null )
+                if (intent.getStringExtra("COUNTRY") != null)
                     user.setCountry(intent.getStringExtra("COUNTRY"));
-                if(intent.getStringExtra("DEPARTMENT")!=null )
+                if (intent.getStringExtra("DEPARTMENT") != null)
                     user.setDepartment(intent.getStringExtra("DEPARTMENT"));
-                if(intent.getStringExtra("POSTAL_CODE")!=null )
-                    user.setPostalCode(intent.getStringExtra("DEPARTMENT"));
-                if(intent.getStringExtra("PASSWORD")!=null )
+                if (intent.getStringExtra("POSTAL_CODE") != null)
+                    user.setPostalCode(intent.getStringExtra("POSTAL_CODE"));
+                if (intent.getStringExtra("PASSWORD") != null)
                     user.setPassword(intent.getStringExtra("PASSWORD"));
 
-                user.setAllProfilesCanCreateNewProfile(intent.getBooleanExtra("CAN_CREATE_PROFILE",false));
+                user.setAllProfilesCanCreateNewProfile(intent.getBooleanExtra("CAN_CREATE_PROFILE", false));
 
             }
 
@@ -160,24 +171,24 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             public void onResponse(Call<ResponseSignUp> call, Response<ResponseSignUp> response) {
 
 
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     new AlertDialog.Builder(SignUpActivity.this)
                             .setTitle("Delete entry")
-                            .setMessage(""+response.body())
+                            .setMessage("" + response.body())
 
                             .show();
 
-                }
-                else {
+                } else {
                     try {
 
                         new AlertDialog.Builder(SignUpActivity.this)
                                 .setTitle("Delete entry")
-                                .setMessage(""+response.errorBody().string())
+                                .setMessage("" + response.errorBody().string())
 
                                 .show();
 
-                    }catch (Exception e){}
+                    } catch (Exception e) {
+                    }
                 }
             }
 
@@ -186,8 +197,58 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
                 new AlertDialog.Builder(SignUpActivity.this)
                         .setTitle("Delete entry")
-                        .setMessage(""+t.getMessage()).show();
+                        .setMessage("" + t.getMessage()).show();
             }
         });
+    }
+
+    public AlertDialog.Builder alert(String msg) {
+        return new AlertDialog.Builder(SignUpActivity.this)
+                .setTitle("Info")
+                .setMessage(msg);
+    }
+
+    public boolean userIsValid(User user) {
+        if (user.getAccess() == null) {
+            alert("Choose a plan").show();
+            return false;
+        }
+        if (user.getBirthday() == null) {
+            alert("Enter your birthday").show();
+            return false;
+        }/*
+        if (user.getCity() == null) {
+            alert("Choose a city").show();
+            return false;
+        }
+        if (user.getCountry() == null) {
+            alert("Choose a country").show();
+            return false;
+        }
+        if (user.getDepartment() == null) {
+            alert("Choose a State").show();
+            return false;
+        }*/
+        if (user.getEmail() == null) {
+            alert("Enter a email").show();
+            return false;
+        }
+        if (user.getPassword() == null) {
+            alert("Enter a password").show();
+            return false;
+        }
+        if (user.getPostalCode() == null) {
+            alert("Enter a postal code").show();
+            return false;
+        }
+        if (user.getTelephone() == null) {
+            alert("Enter a telephone number").show();
+            return false;
+        }
+        if (user.getSex() == null) {
+            alert("Enter a Sex").show();
+            return false;
+        }
+        return true;
     }
 }
