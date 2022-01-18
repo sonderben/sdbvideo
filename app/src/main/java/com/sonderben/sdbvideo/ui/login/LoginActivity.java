@@ -27,6 +27,7 @@ import com.sonderben.sdbvideo.data.model.UserLogin;
 import com.sonderben.sdbvideo.databinding.ActivityLoginBinding;
 import com.sonderben.sdbvideo.ui.choose_profile.ChooseProfileActivity;
 import com.sonderben.sdbvideo.ui.choose_profile.EditProfileActivity;
+import com.sonderben.sdbvideo.ui.sign_up.SignUpActivity;
 import com.sonderben.sdbvideo.utils.Preferences;
 import com.sonderben.sdbvideo.utils.Utils;
 
@@ -63,8 +64,8 @@ public class LoginActivity extends AppCompatActivity {
           loadingProgressBar = binding.loading;
         signup=binding.signup;
         signup.setOnClickListener(x->{
-            //Intent intent=new Intent(LoginActivity.this, SignUpActivity.class);
-            Intent intent=new Intent(LoginActivity.this, EditProfileActivity.class);
+            Intent intent=new Intent(LoginActivity.this, SignUpActivity.class);
+            //Intent intent=new Intent(LoginActivity.this, EditProfileActivity.class);
             startActivity(intent);
         });
 

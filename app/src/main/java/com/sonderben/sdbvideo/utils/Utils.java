@@ -15,7 +15,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Utils {
-
+//192.168.147.239
     public final static String ip="192.168.0.101";
     //192.168.0.101
     public final static String baseurl="http://"+ip+":8080/api/v1/";
