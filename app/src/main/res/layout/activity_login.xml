@@ -22,41 +22,69 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
-    <EditText
-        android:id="@+id/username"
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:id="@+id/lay_username"
+        android:minHeight="@dimen/_36sdp"
+        android:layout_marginRight="@dimen/_30sdp"
+        app:boxStrokeColor="@color/white"
+        android:textColorHint="@color/white"
         android:layout_marginStart="@dimen/_24sdp"
         android:layout_marginTop="@dimen/_146sdp"
+        app:errorEnabled="true"
         android:layout_marginEnd="@dimen/_24sdp"
-        android:hint="@string/prompt_email"
-        android:text="q@gmail.com"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/white"
-        android:inputType="textEmailAddress"
-        android:selectAllOnFocus="true"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <EditText
-        android:id="@+id/password"
-        android:layout_width="0dp"
+        android:layout_marginLeft="@dimen/_30sdp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/_24sdp"
-        android:layout_marginTop="@dimen/_8sdp"
-        android:layout_marginEnd="@dimen/_24sdp"
-        android:hint="@string/prompt_password"
-        android:text="1234"
-        android:textColor="@color/white"
-        android:backgroundTint="@color/white"
-        android:imeActionLabel="@string/action_sign_in_short"
-        android:imeOptions="actionDone"
-        android:inputType="textPassword"
-        android:selectAllOnFocus="true"
+        android:hint="Email"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/username" />
+        app:layout_constraintTop_toTopOf="parent"
+       >
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/username"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColorHint="@color/white"
+            android:textColor="@color/white"
+            android:text="q@gmail.com"/>
+    </com.google.android.material.textfield.TextInputLayout>
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:id="@+id/lay_password"
+        android:minHeight="@dimen/_36sdp"
+        android:layout_marginRight="@dimen/_30sdp"
+        app:boxStrokeColor="@color/white"
+        android:textColorHint="@color/white"
+        android:layout_marginStart="@dimen/_24sdp"
+        android:layout_marginTop="@dimen/_14sdp"
+        android:layout_marginEnd="@dimen/_24sdp"
+        android:layout_marginLeft="@dimen/_30sdp"
+        android:layout_height="wrap_content"
+        app:errorEnabled="true"
+        android:hint="Password"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lay_username"
+        >
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:imeActionLabel="@string/action_sign_in_short"
+            android:imeOptions="actionDone"
+            android:selectAllOnFocus="true"
+            android:text="1234"
+            android:textColor="@color/white"
+            android:textColorHint="@color/white" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/login"
@@ -76,7 +104,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password"
+        app:layout_constraintTop_toBottomOf="@+id/lay_password"
         app:layout_constraintVertical_bias="0.2" />
 
     <CheckBox
@@ -98,8 +126,8 @@
         android:layout_marginBottom="64dp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/password"
-        app:layout_constraintStart_toStartOf="@+id/password"
+        app:layout_constraintEnd_toEndOf="@+id/lay_password"
+        app:layout_constraintStart_toStartOf="@+id/lay_password"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.3" />
     <LinearLayout

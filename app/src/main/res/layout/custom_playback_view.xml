@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:layout_marginRight="10dp"
-            android:drawableLeft="@drawable/ic_lock"
+            android:drawableLeft="@drawable/ic_unlock"
             android:textSize="18sp"
             android:text="Verouiller"/>
         <TextView

@@ -34,7 +34,7 @@ public class SplashScreenActivity extends AppCompatActivity {
 
         Intent intent;
         if(preferences.getToken().length()>8){
-            if (preferences.getIdProfile() == null||preferences.getIdProfile()==0) {
+            if (preferences.getIdProfile()<=0) {
                 intent=new Intent(SplashScreenActivity.this, ChooseProfileActivity.class);
             }
             else

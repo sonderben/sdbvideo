@@ -76,4 +76,53 @@ public class Profile {
         this.defaultLanguage = defaultLanguage;
         this.ageCategory = ageCategory;
     }
+    public Profile (){
+
+    }
+
+    public class Image{
+        String url;
+        String name;
+        String category;
+        String size;
+
+        public Image(String url, String name, String category, String size) {
+            this.url = url;
+            this.name = name;
+            this.category = category;
+            this.size = size;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getCategory() {
+            return category;
+        }
+
+        public void setCategory(String category) {
+            this.category = category;
+        }
+
+        public String getSize() {
+            return size;
+        }
+
+        public void setSize(String size) {
+            this.size = size;
+        }
+    }
 }

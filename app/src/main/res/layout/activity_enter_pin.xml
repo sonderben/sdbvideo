@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg_app"
+    tools:context=".ui.choose_profile.EnterPinActivity">
+
+    <ImageView
+        android:id="@+id/img_profile"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:background="@color/black"
+        android:transitionName="imgprofile"
+        android:minWidth="@dimen/_100sdp"
+        android:minHeight="@dimen/_100sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile"
+        android:transitionName="profilename"
+        android:textColor="@color/textColor"
+        android:textSize="@dimen/_20sdp"
+        app:layout_constraintEnd_toEndOf="@+id/img_profile"
+        app:layout_constraintStart_toStartOf="@+id/img_profile"
+        app:layout_constraintTop_toBottomOf="@+id/img_profile" />
+
+    <ImageView
+        android:id="@+id/icon_lock"
+        android:layout_width="@dimen/_40sdp"
+        android:layout_height="@dimen/_40sdp"
+        android:drawableTop="@drawable/ic_lock_24"
+        android:src="@drawable/ic_lock_24"
+        app:layout_constraintEnd_toEndOf="@+id/name"
+        app:layout_constraintStart_toStartOf="@+id/name"
+        app:layout_constraintTop_toBottomOf="@+id/name" />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textColor"
+        android:text="Enter your pin code"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:textSize="@dimen/_18sdp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/icon_lock" />
+
+
+    <com.goodiebag.pinview.Pinview
+        android:id="@+id/pin_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorVisible="false"
+        app:forceKeyboard="true"
+        app:hint="0"
+        app:inputType="number"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/label"
+        app:password="true"
+        app:textSize="@dimen/_20sdp"
+        android:gravity="center"
+        app:pinHeight="@dimen/_70sdp"
+        app:pinLength="4"
+        app:pinWidth="@dimen/_50sdp" />
+
+    <TextView
+        android:id="@+id/error"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Incorrect pin code, please try again,"
+        android:textColor="#F80606"
+        android:visibility="gone"
+        android:textSize="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/pin_view" />
+
+    <TextView
+        android:id="@+id/forgot_pin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="Forgotten pin code?"
+        android:textColor="@color/textColor"
+        android:textStyle="italic"
+        android:textSize="@dimen/_16sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/error" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="@dimen/_2sdp"
+        android:background="@color/teal_200"
+        app:layout_constraintEnd_toEndOf="@+id/forgot_pin"
+        app:layout_constraintStart_toStartOf="@+id/forgot_pin"
+        app:layout_constraintTop_toBottomOf="@+id/forgot_pin" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

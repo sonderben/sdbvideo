@@ -54,7 +54,7 @@
                     android:textSize="@dimen/_18sdp"
                     android:textColorHint="#A8A4A4"
                     android:inputType="textPassword"
-                    android:drawableLeft="@drawable/ic_lock"
+                    android:drawableLeft="@drawable/ic_unlock"
                     android:hint="@string/prompt_password"/>
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,7 +94,7 @@
                     android:textSize="@dimen/_18sdp"
                     android:textColorHint="#A8A4A4"
                     android:inputType="textPassword"
-                    android:drawableLeft="@drawable/ic_lock"
+                    android:drawableLeft="@drawable/ic_unlock"
                     android:hint="@string/prompt_password"/>
                 <TextView
                     android:layout_width="wrap_content"

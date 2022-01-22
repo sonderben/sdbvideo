@@ -8,6 +8,7 @@
         android:id="@+id/profile_foto"
         android:layout_width="@dimen/_120sdp"
         android:layout_height="@dimen/_120sdp"
+        android:transitionName="imgprofile"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"/>
     <TextView
@@ -16,6 +17,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:gravity="center"
+        android:transitionName="profilename"
         android:textSize="@dimen/_16sdp"
         android:textColor="@color/white"
         android:maxLines="1"

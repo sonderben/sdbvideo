@@ -20,6 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import com.sonderben.sdbvideo.MainActivity2;
 import com.sonderben.sdbvideo.VideoPlayerActivity;
 import com.sonderben.sdbvideo.data.UserRepository;
@@ -45,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
     private  TextView signup;
     String tempEmail;
+    private TextInputLayout layPassword,layEmail;
     ProgressBar loadingProgressBar;
 
     @Override
@@ -58,10 +61,13 @@ public class LoginActivity extends AppCompatActivity {
                 .get(LoginViewModel.class);
 
 
-        final EditText usernameEditText = binding.username;
-        final EditText passwordEditText = binding.password;
+        //final EditText usernameEditText = binding.username;
+        final TextInputEditText usernameEditText = binding.username;
+        final TextInputEditText passwordEditText = binding.password;
         final Button loginButton = binding.login;
           loadingProgressBar = binding.loading;
+          layPassword=binding.layPassword;
+          layEmail=binding.layUsername;
         signup=binding.signup;
         signup.setOnClickListener(x->{
             Intent intent=new Intent(LoginActivity.this, SignUpActivity.class);
@@ -136,13 +142,19 @@ public class LoginActivity extends AppCompatActivity {
                     loadingProgressBar.setVisibility(View.INVISIBLE);
                     Intent intent=new Intent(LoginActivity.this, ChooseProfileActivity.class);
 
-                    intent.putExtra("Activity",1);
+                    intent.putExtra("Activity",this.getClass());
                     startActivity(intent);
                 }
                 else {
                     try {
                         JSONObject jsonError=new JSONObject(response.errorBody().string());
                         int status=jsonError.getInt("status");
+                        if(status==404){
+                            loadingProgressBar.setVisibility(View.GONE);
+                            layEmail.setError(" ");
+                            //layPassword.setHelperText("error on email or password!");
+                            layPassword.setError("Error on email or password!");
+                        }
                         String message= jsonError.getString("error");
                         Toast.makeText(LoginActivity.this, message+". error: "+status , Toast.LENGTH_LONG).show();
                     }catch (Exception e){}

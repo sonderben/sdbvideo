@@ -3,7 +3,6 @@ package com.sonderben.sdbvideo;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -11,9 +10,6 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -62,7 +58,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         mEpo = findViewById(R.id.epo);
         mSubtitle = findViewById(R.id.sub);
 
-        String urlFilm=getIntent().getStringExtra("URL_FILM");
+        String urlFilm="https://ejemploht.s3.us-east-2.amazonaws.com/ils+on+fait+l+amerique/Ils+ont+fait+l_Am%C3%A9rique+1l8+Une+nouvelle+%C3%A8re.mp4";//getIntent().getStringExtra("URL_FILM");
         playVideo2(urlFilm);
 
         mPlaybackParameters = new PlaybackParameters(1f);
@@ -264,7 +260,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         } else if (id == R.id.unlock) {
 
             if (!mCanUnlockScreen) {
-                setmUnlockTextView(R.drawable.ic_lock, "Deverouiller l'ecran ?", R.drawable.bg_icon_in_cicle2);
+                setmUnlockTextView(R.drawable.ic_unlock, "Deverouiller l'ecran ?", R.drawable.bg_icon_in_cicle2);
                 mCanUnlockScreen = true;
             } else {
                 mLayoutLock.setVisibility(View.GONE);

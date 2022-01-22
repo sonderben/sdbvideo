@@ -60,7 +60,7 @@ public class HomeFragment extends Fragment {
         play= binding.play;
         mute=binding.mute;
 
-        mSimpleExoPlayer = new SimpleExoPlayer.Builder(requireContext()).build();
+       /* mSimpleExoPlayer = new SimpleExoPlayer.Builder(requireContext()).build();
         String url="https://ejemploht.s3.us-east-2.amazonaws.com/officielle+(VF)+-+YouTube.mkv";
         MediaItem mediaItem=new MediaItem.Builder()
                 .setUri(url)
@@ -69,24 +69,24 @@ public class HomeFragment extends Fragment {
         playerView.setPlayer(mSimpleExoPlayer);
 
         mSimpleExoPlayer.prepare();
-        mSimpleExoPlayer.setPlayWhenReady(true);
+        mSimpleExoPlayer.setPlayWhenReady(true);*/
 
         play.setOnClickListener(i->{
             Intent intent=new Intent(getContext(),VideoPlayerActivity.class);
-            intent.putExtra("URL_FILM",url);
-            startActivity(intent);
+           /* intent.putExtra("URL_FILM",url);
+            startActivity(intent);*/
         });
 
 scrollView.fullScroll(ScrollView.FOCUS_UP);
         mute.setOnClickListener(x->{
-            if(mSimpleExoPlayer.getVolume()!=0.0f){
+            /*if(mSimpleExoPlayer.getVolume()!=0.0f){
                 mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_volume_off_30, 0, 0, 0);
                 currentVolume= mSimpleExoPlayer.getVolume();
                 mSimpleExoPlayer.setVolume(0.0f);
             }else{
                 mSimpleExoPlayer.setVolume(currentVolume);
                 mute.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_volume_up_30, 0, 0, 0);
-            }
+            }*/
         });
 
         scrollView.getViewTreeObserver().addOnScrollChangedListener(new ViewTreeObserver.OnScrollChangedListener() {
@@ -94,10 +94,10 @@ scrollView.fullScroll(ScrollView.FOCUS_UP);
             public void onScrollChanged() {
                 Rect bound=new Rect();
                 scrollView.getHitRect(bound);
-                if(playerView.getLocalVisibleRect(bound)){
+                /*if(playerView.getLocalVisibleRect(bound)){
                     mSimpleExoPlayer.play();
                 }
-                else mSimpleExoPlayer.pause();
+                else mSimpleExoPlayer.pause();*/
             }
         });
 
@@ -139,9 +139,9 @@ scrollView.fullScroll(ScrollView.FOCUS_UP);
             lpR.setMargins(20, 0, 0, 20);
             recyclerViews[i].setLayoutParams(lpR);
             recyclerViews[i].setFocusable(false);
-            recyclerViews[i].setAdapter(adapterFilm4MainActivity[i]);
-            recyclerViews[i].setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
-            bodyLayout.addView(recyclerViews[i]);
+            //recyclerViews[i].setAdapter(adapterFilm4MainActivity[i]);
+            //recyclerViews[i].setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
+            //bodyLayout.addView(recyclerViews[i]);
         }
 
 
@@ -150,7 +150,7 @@ scrollView.fullScroll(ScrollView.FOCUS_UP);
     }
 
     PlayerView playerView;
-    SimpleExoPlayer mSimpleExoPlayer;
+    //SimpleExoPlayer mSimpleExoPlayer;
     TextView mute;
     float currentVolume;
     ScrollView scrollView;
@@ -159,22 +159,22 @@ scrollView.fullScroll(ScrollView.FOCUS_UP);
     @Override
     public void onPause() {
         super.onPause();
-        mSimpleExoPlayer.setPlayWhenReady(false);
-        mSimpleExoPlayer.getPlaybackState();
+       /* mSimpleExoPlayer.setPlayWhenReady(false);
+        mSimpleExoPlayer.getPlaybackState();*/
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mSimpleExoPlayer.prepare();
+      /*  mSimpleExoPlayer.prepare();
         mSimpleExoPlayer.setPlayWhenReady(true);
-        mSimpleExoPlayer.getPlaybackState();
+        mSimpleExoPlayer.getPlaybackState();*/
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        mSimpleExoPlayer.stop();
+        //mSimpleExoPlayer.stop();
     }
 
     @Override

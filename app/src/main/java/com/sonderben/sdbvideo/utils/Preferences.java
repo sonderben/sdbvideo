@@ -5,8 +5,9 @@ import android.content.SharedPreferences;
 
 public class Preferences {
     private static SharedPreferences tokenPreferences;
-    private static SharedPreferences idProfilePreferences;
+    private static SharedPreferences profilePreferences;
     private static SharedPreferences emailUserPreferences;
+    //private static SharedPreferences isMAinProfilePreference;
 
 
     private Context context;
@@ -16,8 +17,9 @@ public class Preferences {
     private Preferences(Context context) {
         this.context = context;
         tokenPreferences= context.getSharedPreferences("TOKEN",Context.MODE_PRIVATE);
-        idProfilePreferences= context.getSharedPreferences("ID_PROFILE",context.MODE_PRIVATE);
+        profilePreferences = context.getSharedPreferences("ID_PROFILE",context.MODE_PRIVATE);
         emailUserPreferences= context.getSharedPreferences("EMAIL_USER",Context.MODE_PRIVATE);
+        //isMAinProfilePreference= context.getSharedPreferences("IS_MAIN",Context.MODE_PRIVATE);
     }
     public static Preferences getPreferenceInstance(Context context){
         if(preferences==null){
@@ -37,13 +39,13 @@ public class Preferences {
 
 
     public  void setIdProfile(Long idProfile){
-        SharedPreferences.Editor editor=tokenPreferences.edit();
+        SharedPreferences.Editor editor= profilePreferences.edit();
         editor.putLong("ID_PROFILE", idProfile);
         editor.apply();
         editor.commit();
     }
     public Long getIdProfile(){
-        return tokenPreferences.getLong("ID_PROFILE",0L);
+        return profilePreferences.getLong("ID_PROFILE",0L);
     }
 
     public  void setEmailUserPreferences(String email){
@@ -54,5 +56,15 @@ public class Preferences {
     }
     public String getEmailUser(){
         return emailUserPreferences.getString("EMAIL_USER","");
+    }
+
+    public  void setIsMainProfilesPreferences(Boolean isMain){
+        SharedPreferences.Editor editor= profilePreferences.edit();
+        editor.putBoolean("IS_MAIN", isMain);
+        editor.apply();
+        editor.commit();
+    }
+    public boolean getIsMainProfilesPreferences(){
+        return profilePreferences.getBoolean("IS_MAIN",false);
     }
 }
