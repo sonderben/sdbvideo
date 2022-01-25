@@ -11,6 +11,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -35,5 +36,9 @@ Call<UserProfile> getUser(@Query("id") String id, @Header("Authorization") Strin
 
     @GET("image")
     Call<List<Profile.Image>> getImages();
+
+    @Headers({ "Content-Type: application/json;charset=UTF-8"})
+    @PUT("profile/{profile}")
+    Call<Profile> updateProfile(@Path("profile") Long profile, @Body Profile prof, @Header("Authorization") String auth );
 
 }

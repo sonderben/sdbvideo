@@ -1,8 +1,11 @@
 package com.sonderben.sdbvideo.ui.me;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -12,6 +15,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.sonderben.sdbvideo.R;
@@ -73,27 +79,30 @@ public class MeFragment extends Fragment {
         // Inflate the layout for this fragment
         binding=FragmentMeBinding.inflate(getLayoutInflater());
         View root=binding.getRoot();
-        TextView signOut= binding.logout;
         recyclerView=binding.recyclerview;
+        listView=binding.listview;
 
-        //recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext(),RecyclerView.HORIZONTAL,false));
+
         Preferences preferences=Preferences.getPreferenceInstance(MeFragment.this.getContext());
         getAllProfiles(preferences.getEmailUser(), preferences.getToken());
+        String[]strings={"My list","App parameter","Account","Sign out"};
+        listView.setAdapter(new Adapter(strings));
 
-        signOut.setOnClickListener(new View.OnClickListener() {
+        /*signOut.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Utils.signOut(MeFragment.this.getContext());
+
                 Intent intent=new Intent(MeFragment.this.getContext(), LoginActivity.class);
                 startActivity(intent);
                 MeFragment.this.getActivity().finish();
             }
-        });
+        });*/
         return root;
     }
     FragmentMeBinding binding;
     RecyclerView recyclerView;
     AdapterProfile4MeFragmen adapter;
+    ListView listView;
 
 
     public void getAllProfiles(String email,String token){
@@ -127,4 +136,44 @@ public class MeFragment extends Fragment {
 
     }
 
+    private class Adapter extends BaseAdapter {
+        String[]strings;
+        final int SIGN_OUT=3;
+        public Adapter(String[]strings){
+            this.strings=strings;
+        }
+
+        @Override
+        public int getCount() {
+            return strings.length;
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return strings[i];
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @NonNull
+        @Override
+        public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+
+            convertView=getLayoutInflater().inflate(R.layout.custum_item_list_view_4fragment_me,parent,false);
+            TextView textView=convertView.findViewById(R.id.text_view);
+            textView.setText(strings[position]);
+            convertView.setOnClickListener(x->{
+                if (position==SIGN_OUT){
+                    Intent intent=new Intent(MeFragment.this.getContext(),LoginActivity.class);
+                    MeFragment.this.getActivity().startActivity(intent);
+                    MeFragment.this.getActivity().finish();
+                    Utils.signOut(MeFragment.this.getContext());
+                }
+            });
+            return convertView;
+        }
+    }
 }

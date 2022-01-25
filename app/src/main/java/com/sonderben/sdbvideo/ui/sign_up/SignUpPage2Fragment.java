@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.Editable;
@@ -60,6 +61,27 @@ public class SignUpPage2Fragment extends Fragment {
                              Bundle savedInstanceState) {
         binding=FragmentSignUpPage2Binding.inflate(getLayoutInflater());
         View root=binding.getRoot();
+        SignUpViewModel signUpViewModel=new ViewModelProvider(this.getActivity()).get(SignUpViewModel.class);
+
+        email= binding.email;
+        TextWatcher textWatcherEmail=new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                signUpViewModel.setUserEmail(email.getText().toString());
+            }
+        };
+        email.addTextChangedListener(textWatcherEmail);
+
 
         firstName= binding.firstName;
         TextWatcher textWatcherFirstName=new TextWatcher() {
@@ -75,8 +97,7 @@ public class SignUpPage2Fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                intent.putExtra("FIRST_NAME",firstName.getText().toString());
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                signUpViewModel.setUserFirstName(firstName.getText().toString());
             }
         };
         firstName.addTextChangedListener(textWatcherFirstName);
@@ -95,14 +116,15 @@ public class SignUpPage2Fragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                intent.putExtra("LAST_NAME",lastName.getText().toString());
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                //intent.putExtra("LAST_NAME",lastName.getText().toString());
+                //LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                signUpViewModel.setUserLastName(lastName.getText().toString());
             }
         };
         lastName.addTextChangedListener(textWatcherLastName);
         return root;
     }
     FragmentSignUpPage2Binding binding;
-    EditText firstName,lastName;
-    Intent intent=new Intent("SIGN_UP");
+    EditText firstName,lastName,email;
+
 }

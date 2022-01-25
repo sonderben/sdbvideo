@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@mipmap/bg_app"
     android:layout_height="match_parent"
     tools:context=".ui.sign_up.SignUpPage3Fragment">
@@ -15,51 +16,82 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            <DatePicker
-                android:id="@+id/date_picker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/light_blue_600"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:minHeight="@dimen/_36sdp"
-                android:drawableTint="#A8A4A4"
-                android:spinnersShown="true"
-                android:calendarViewShown="false"
-                android:datePickerMode="spinner"
-                android:paddingLeft="@dimen/_5sdp"
-                android:selectAllOnFocus="true"
-                android:background="@drawable/bg_et"
-                android:textSize="@dimen/_18sdp"
-                android:textColorHint="#A8A4A4"
-                android:inputType="textEmailAddress"
-                android:drawableLeft="@drawable/ic_email_24"
-                android:hint="@string/prompt_email"/>
 
-            <LinearLayout
+
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:paddingLeft="@dimen/_5sdp"
-                android:layout_marginTop="@dimen/_10sdp"
-                android:minHeight="@dimen/_36sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:background="@drawable/bg_et">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawableTint="#A8A4A4"
-                    android:layout_gravity="center"
-                    android:drawableLeft="@drawable/ic_sex_24" />
-                <Spinner
-                    android:id="@+id/spinner_gender"
+                android:layout_height="match_parent"
+                app:cardBackgroundColor="@android:color/transparent"
+                android:layout_margin="@dimen/_10sdp">
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"/>
-            </LinearLayout>
+                    android:orientation="vertical">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/lay_birthday"
+                        android:minHeight="@dimen/_36sdp"
+                        app:boxStrokeColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:layout_height="wrap_content"
+                        app:errorEnabled="true"
+                        android:hint="Birthday"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/lay_username"
+                        >
 
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/birthday"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:imeActionLabel="@string/action_sign_in_short"
+                            android:imeOptions="actionDone"
+                            android:selectAllOnFocus="true"
+                            android:text="12 / 02 / 2014"
+                            android:textColor="@color/white"
+                            android:textColorHint="@color/white" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:minHeight="@dimen/_36sdp"
+                        android:layout_marginRight="@dimen/_10sdp"
+                        android:background="@android:color/transparent">
+
+
+
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/menu_sp"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <AutoCompleteTextView
+                                android:id="@+id/autoComplete"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"
+                                android:hint="Sex"
+                                />
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
 
         </LinearLayout>

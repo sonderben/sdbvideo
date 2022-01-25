@@ -7,18 +7,24 @@
     android:background="@mipmap/bg_app"
     tools:context=".ui.choose_profile.EnterPinActivity">
 
-    <ImageView
-        android:id="@+id/img_profile"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/lay_img_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_50sdp"
-        android:background="@color/black"
-        android:transitionName="imgprofile"
-        android:minWidth="@dimen/_100sdp"
-        android:minHeight="@dimen/_100sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent">
+        <ImageView
+            android:id="@+id/img_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:background="@color/black"
+            android:transitionName="imgprofile"
+            android:minWidth="@dimen/_100sdp"
+            android:minHeight="@dimen/_100sdp"/>
+    </com.google.android.material.card.MaterialCardView>
 
     <TextView
         android:id="@+id/name"
@@ -28,9 +34,12 @@
         android:transitionName="profilename"
         android:textColor="@color/textColor"
         android:textSize="@dimen/_20sdp"
-        app:layout_constraintEnd_toEndOf="@+id/img_profile"
-        app:layout_constraintStart_toStartOf="@+id/img_profile"
-        app:layout_constraintTop_toBottomOf="@+id/img_profile" />
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="@+id/lay_img_profile"
+        app:layout_constraintStart_toStartOf="@+id/lay_img_profile"
+        app:layout_constraintTop_toBottomOf="@+id/lay_img_profile" />
 
     <ImageView
         android:id="@+id/icon_lock"

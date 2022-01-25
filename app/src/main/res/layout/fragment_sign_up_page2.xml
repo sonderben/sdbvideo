@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@mipmap/bg_app"
     tools:context=".ui.sign_up.SignUpPage2Fragment">
 
@@ -16,62 +17,91 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
 
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_margin="@dimen/_10sdp"
+                app:cardBackgroundColor="@android:color/transparent"
+                android:layout_height="match_parent">
 
-            <EditText
-                android:id="@+id/first_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/light_blue_600"
-                android:minHeight="@dimen/_36sdp"
-                android:text="Ben"
-                android:drawableTint="#A8A4A4"
-                android:paddingLeft="@dimen/_5sdp"
-                android:selectAllOnFocus="true"
-                android:background="@drawable/bg_et"
-                android:textSize="@dimen/_18sdp"
-                android:textColorHint="#A8A4A4"
-                android:inputType="textPersonName"
-                android:drawableLeft="@drawable/ic_user_24"
-                android:hint="@string/prompt_first_name"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFCC00"
-                android:visibility="invisible"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:text="No valid"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/lay_email"
+                        android:minHeight="@dimen/_36sdp"
+                        app:boxStrokeColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        app:errorEnabled="true"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_height="wrap_content"
+                        android:hint="Email"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/email"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:textColorHint="@color/white"
+                            android:textColor="@color/white"
+                            android:text="q@gmail.com"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/lay_first_name"
+                        android:minHeight="@dimen/_36sdp"
+                        app:boxStrokeColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        app:errorEnabled="true"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_height="wrap_content"
+                        android:hint="First name"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/first_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textCapWords"
+                            android:textColorHint="@color/white"
+                            android:textColor="@color/white"
+                            android:text="Ben"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:id="@+id/lay_last_name"
+                        android:minHeight="@dimen/_36sdp"
+                        app:boxStrokeColor="@color/white"
+                        android:textColorHint="@color/white"
+                        android:layout_marginStart="@dimen/_5sdp"
+                        android:layout_marginTop="@dimen/_14sdp"
+                        app:errorEnabled="true"
+                        android:layout_marginEnd="@dimen/_5sdp"
+                        android:layout_marginLeft="@dimen/_5sdp"
+                        android:layout_height="wrap_content"
+                        android:hint="Last name"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        >
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/last_name"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:inputType="textCapWords"
+                            android:textColorHint="@color/white"
+                            android:textColor="@color/white"
+                            android:text="der"/>
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
 
-            <EditText
-                android:id="@+id/last_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:backgroundTint="@color/white"
-                android:textColor="@color/light_blue_600"
-                android:minHeight="@dimen/_36sdp"
-                android:text="Der"
-                android:drawableTint="#A8A4A4"
-                android:paddingLeft="@dimen/_5sdp"
-                android:selectAllOnFocus="true"
-                android:background="@drawable/bg_et"
-                android:textSize="@dimen/_18sdp"
-                android:textColorHint="#A8A4A4"
-                android:inputType="textPersonName"
-                android:drawableLeft="@drawable/ic_user_24"
-                android:hint="@string/prompt_last_name"/>
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="#FFCC00"
-                android:visibility="invisible"
-                android:layout_marginBottom="@dimen/_10sdp"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:text="No valid email"/>
+            </androidx.cardview.widget.CardView>
+
 
         </LinearLayout>
 

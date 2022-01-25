@@ -15,15 +15,26 @@ public class Access {
      int  numOfScreen;
      float price;
 
+     public String getQualityImage() {
+          return qualityImage;
+     }
+
+     public void setQualityImage(String qualityImage) {
+          this.qualityImage = qualityImage;
+     }
+
+     String qualityImage;
+
      public Access(long id){
           this.id=id;
      }
-     public Access(Long id,String name, String code, int numOfScreen, float price) {
+     public Access(Long id,String name, String code, int numOfScreen, float price,String qualityImage) {
           this.id=id;
           this.name = name;
           this.code = code;
           this.numOfScreen = numOfScreen;
           this.price = price;
+          this.qualityImage=qualityImage;
      }
 
      @Override

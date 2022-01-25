@@ -1,10 +1,14 @@
 package com.sonderben.sdbvideo.ui.sign_up;
 
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.Editable;
@@ -15,8 +19,13 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,10 +60,13 @@ public class SignUpPage1Fragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private static final int NUM_ROW = 5;
+    private static final int NUM_ColUMN=4;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
 
     public SignUpPage1Fragment() {
         // Required empty public constructor
@@ -85,16 +97,38 @@ public class SignUpPage1Fragment extends Fragment {
         // Inflate the layout for this fragment
         page1Binding=FragmentSignUpPage1Binding.inflate(getLayoutInflater());
         View view= page1Binding.getRoot();
+        free=page1Binding.free;
+        standard=page1Binding.rbStandard;
+        premium=page1Binding.rbPremium;
+         layout =  page1Binding.tab;
 
-        String []a={"ht","fr","es"};
+        signUpViewModel=new ViewModelProvider(this.getActivity()).get(SignUpViewModel.class);
 
-         spinner=page1Binding.spinAccess;
-         info= page1Binding.infoAccess;
-         progressBar= page1Binding.progressBar;
-         mEmail=page1Binding.email;
-         mInfoEmail=page1Binding.infoEmail;
+        setRadioButtonEnabled(false);
+        free.setOnClickListener(x->{
+            standard.setChecked(false);
+            premium.setChecked(false);
+            signUpViewModel.setUserAccess(accesses.get(0));
+            checkedPlan(1,oldSelectedRadiobutton);
+            oldSelectedRadiobutton=1;
+        });
+        standard.setOnClickListener(x->{
+            free.setChecked(false);
+            premium.setChecked(false);
+            signUpViewModel.setUserAccess(accesses.get(1));
+            checkedPlan(2,oldSelectedRadiobutton);
+            oldSelectedRadiobutton=2;
+        });
+        premium.setOnClickListener(x->{
+            free.setChecked(false);
+            standard.setChecked(false);
+            signUpViewModel.setUserAccess(accesses.get(2));
+            checkedPlan(3,oldSelectedRadiobutton);
+            oldSelectedRadiobutton=3;
+        });
 
-        TextWatcher textWatcher=new TextWatcher() {
+        getAccess();
+       /* TextWatcher textWatcher=new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -112,7 +146,7 @@ public class SignUpPage1Fragment extends Fragment {
             }
         };
         mEmail.addTextChangedListener(textWatcher);
-        a();
+
 
         TextWatcher afterTextChangedListener = new TextWatcher() {
             @Override
@@ -162,7 +196,7 @@ public class SignUpPage1Fragment extends Fragment {
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
-        });
+        });*/
 
 
 
@@ -171,44 +205,68 @@ public class SignUpPage1Fragment extends Fragment {
 
         return  view;
     }
-    Intent intent=new Intent("SIGN_UP");
+
     FragmentSignUpPage1Binding page1Binding;
+    RadioButton free,standard,premium;
+    SignUpViewModel signUpViewModel;
     ArrayAdapter<String> adapter ;
     TextView mInfoEmail;
     Spinner spinner;
     EditText info,mEmail;
-    List<Access>accessList;
+    List<Access>accesses;
     ProgressBar progressBar;
-    private void a() {
-        Retrofit retrofit = new Retrofit.Builder()//192.168.0.103
-                .baseUrl(Utils.baseurl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+    TableLayout layout;
+    ColorStateList defaultColor;
+    int oldSelectedRadiobutton=-1;
+
+    private void getAccess() {
+        Retrofit retrofit =Utils.getInstanceRetrofit();
         UserSignUpRepository repository = retrofit.create(UserSignUpRepository.class);
         Call<List<Access>> call = repository.getAccesses();
         call.enqueue(new Callback<List<Access>>() {
             @Override
             public void onResponse(Call<List<Access>> call, Response<List<Access>> response) {
                 if(response.isSuccessful()){
-                    progressBar.setVisibility(View.GONE);
-                    List<Access> accesses=response.body();
-                    /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        accesses.stream().forEach(x->{});
-                    }*/
-                    accessList=accesses;
-                    String []accessName=new String[accesses.size()+1];
-                    accessName[0]="Choose a plan".toUpperCase();
-                    for (int a=0;a<accesses.size();a++){
-                        accessName[a+1]=accesses.get(a).getName().toUpperCase();
+                     layout =  page1Binding.tab;
+                    accesses=response.body();
+
+                    for (int i = 1; i < 6; i++) {
+                        View row = layout.getChildAt(i);
+
+                        if (row instanceof TableRow) {
+                            TableRow tempRow = (TableRow) row;
+
+                            for (int x = 1; x < accesses.size()+1; x++) {
+                                View view = tempRow.getChildAt(x);
+                                if (view instanceof TextView) {
+                                   TextView textView= (TextView) view;
+                                   if(i==1) {
+                                       textView.setText(accesses.get(x - 1).getName());
+                                   }
+                                    if(i==2) {
+                                        textView.setText(accesses.get(x - 1).getNumOfScreen()+"");
+                                    }
+                                    if(i==3) {//pub}
+                                        textView.setText(accesses.get(x - 1).getName().equalsIgnoreCase("free") ? "Yes" : "No");
+                                    }
+                                    if(i==4) {
+                                        textView.setText(accesses.get(x - 1).getPrice() + "");
+                                    }
+                                    if(i==5) {
+                                        textView.setText(accesses.get(x - 1).getQualityImage());
+                                    }
+                                }
+
+                            }
+                        }
                     }
-                    adapter =new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,accessName);
-                    spinner.setAdapter(adapter);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    setRadioButtonEnabled(true);
+
                 }
                 else {
                     Gson gson=new Gson();
                     ErrorMessage errorMessage;
-                   /* try {
+                   try {
                         info.setText(response.errorBody().string());
                         JSONObject jsonError=new JSONObject(response.errorBody().string());
                         String message= jsonError.getString("error");
@@ -220,7 +278,7 @@ public class SignUpPage1Fragment extends Fragment {
                     } catch (JSONException e) {
                         Toast.makeText(SignUpPage1Fragment.this.getContext(),"error json: "+e.getMessage(),Toast.LENGTH_LONG).show();
                         e.printStackTrace();
-                    }*/
+                    }
                     System.out.println(response.message());
                     info.setText(response.message());
 
@@ -232,5 +290,40 @@ public class SignUpPage1Fragment extends Fragment {
                 Toast.makeText(SignUpPage1Fragment.this.getContext(),"error failure",Toast.LENGTH_LONG).show();
             }
         });
+    }
+    private void setRadioButtonEnabled(boolean b){
+        free.setEnabled(b);
+        standard.setEnabled(b);
+        premium.setEnabled(b);
+    }
+    private void checkedPlan(int x,int old){
+        for (int i = 1; i < 6; i++) {
+            View row = layout.getChildAt(i);
+
+            if (row instanceof TableRow) {
+                TableRow tempRow = (TableRow) row;
+
+                    View view = tempRow.getChildAt(x);
+                    if (view instanceof TextView) {
+                        TextView textView= (TextView) view;
+                        defaultColor=textView.getTextColors();
+                       textView.setTextColor(getResources().getColor(R.color.teal_200));
+                       textView.setTypeface(Typeface.DEFAULT_BOLD);
+                    }
+
+            }
+
+            if (row instanceof TableRow && old >= 0) {
+                TableRow tempRow = (TableRow) row;
+
+                View view = tempRow.getChildAt(old);
+                if (view instanceof TextView) {
+                    TextView textView= (TextView) view;
+                    textView.setTextColor(defaultColor);
+                    textView.setTypeface(Typeface.DEFAULT);
+                }
+
+            }
+        }
     }
 }

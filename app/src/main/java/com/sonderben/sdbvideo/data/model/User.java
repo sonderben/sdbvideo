@@ -8,7 +8,7 @@ public class User {
     String email;
     String firstName;
     String lastName;
-    String birthday;
+    Calendar birthday;
     String telephone;
     String country;
     String region;
@@ -32,7 +32,7 @@ public class User {
 
     public User(){
         allProfilesCanCreateNewProfile=false;
-        birthday="2004 01 01";
+        //birthday=C;
         region="";
     }
 
@@ -77,11 +77,11 @@ public class User {
         this.lastName = lastName;
     }
 
-    public String getBirthday() {
+    public Calendar getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Calendar birthday) {
         this.birthday = birthday;
     }
 
@@ -162,7 +162,7 @@ public class User {
     }
 
     public User( Access access, boolean allProfilesCanCreateNewProfile, String email,
-                String firstName, String lastName, String birthday, String telephone,
+                String firstName, String lastName, Calendar birthday, String telephone,
                 String country, String region, String city, String department, String postalCode,
                 String password, String sex) {
 

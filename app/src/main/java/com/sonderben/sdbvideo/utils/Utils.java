@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Utils {
 //192.168.147.239
-    public final static String ip="172.16.0.6";
+    public final static String ip="192.168.0.101";
     //192.168.0.101
     public final static String baseurl="http://"+ip+":8080/api/v1/";
     private final static String baseUrlCountryStateCity="https://api.countrystatecity.in/v1/";

@@ -6,28 +6,41 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.adapter.AdapterViewPager4SignUp;
+import com.sonderben.sdbvideo.data.UserRepository;
 import com.sonderben.sdbvideo.data.model.Access;
 import com.sonderben.sdbvideo.data.model.Country;
+import com.sonderben.sdbvideo.data.model.Profile;
 import com.sonderben.sdbvideo.data.model.ResponseSignUp;
 import com.sonderben.sdbvideo.data.model.User;
+import com.sonderben.sdbvideo.data.model.UserLogin;
 import com.sonderben.sdbvideo.databinding.ActivitySignUpBinding;
 import com.sonderben.sdbvideo.repository.UserSignUpRepository;
+import com.sonderben.sdbvideo.ui.choose_profile.ChooseProfileActivity;
+import com.sonderben.sdbvideo.ui.choose_profile.EditProfileActivity;
+import com.sonderben.sdbvideo.ui.login.LoginActivity;
 import com.sonderben.sdbvideo.utils.Preferences;
 import com.sonderben.sdbvideo.utils.Utils;
 import com.tbuonomo.viewpagerdotsindicator.SpringDotsIndicator;
+
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,12 +50,16 @@ import retrofit2.Retrofit;
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener {
     ActivitySignUpBinding signUpBinding;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Utils.setFullScreen(this);
+         signUpViewModel=new ViewModelProvider(this).get(SignUpViewModel.class);
         signUpBinding = ActivitySignUpBinding.inflate(getLayoutInflater());
         setContentView(signUpBinding.getRoot());
         viewPager2 = signUpBinding.viewPager2;
+        progressBarSignUp=signUpBinding.progressBarSignUp;
         final TextView nextPage = signUpBinding.nextPage;
         final TextView previousPage = signUpBinding.previousPage;
         signIn = signUpBinding.signIn;
@@ -53,22 +70,15 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         viewPager2.setUserInputEnabled(false);
         preferences= Preferences.getPreferenceInstance(this);
 
+
+
+
+
         signIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println(user);
-                System.err.println(user);
-                Log.i("userm", "" + user);
 
-                if (userIsValid(user)) {
-                    signUp(user);
-                    preferences.setEmailUserPreferences(user.getEmail());
-                }
-                 /*new AlertDialog.Builder(SignUpActivity.this)
-                         .setTitle("Delete entry")
-                         .setMessage(""+user)
-
-                         .show();*/
+                verifiedAndSiggnUp();
 
 
             }
@@ -96,15 +106,17 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     signIn.setVisibility(View.GONE);
             }
         });
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver, new IntentFilter("SIGN_UP"));
+
     }
 
 
     ViewPager2 viewPager2;
     AdapterViewPager4SignUp adapterViewPager4SignUp;
-    User user = new User();
     MaterialButton signIn;
     Preferences preferences;
+
+    SignUpViewModel signUpViewModel;
+    ProgressBar progressBarSignUp;
 
     @Override
     public void onClick(View view) {
@@ -122,46 +134,12 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            if (intent.getAction().equals("SIGN_UP")) {
 
-                if (intent.getLongExtra("ID_ACCESS", 0) != 0)
-                    user.setAccess(new Access(intent.getLongExtra("ID_ACCESS", 0)));
-                if (intent.getStringExtra("EMAIL") != null)
-                    user.setEmail(intent.getStringExtra("EMAIL"));
-                if (intent.getStringExtra("FIRST_NAME") != null)
-                    user.setFirstName(intent.getStringExtra("FIRST_NAME"));
-                if (intent.getStringExtra("LAST_NAME") != null)
-                    user.setLastName(intent.getStringExtra("LAST_NAME"));
-                if (intent.getStringExtra("BIRTHDAY") != null)
-                    user.setBirthday(intent.getStringExtra("BIRTHDAY"));
-                if (intent.getStringExtra("SEX") != null)
-                    user.setSex(intent.getStringExtra("SEX"));
-                if (intent.getStringExtra("TELEPHONE") != null)
-                    user.setTelephone(intent.getStringExtra("TELEPHONE"));
-                if (intent.getStringExtra("REGION") != null)
-                    user.setRegion(intent.getStringExtra("REGION"));
-                if (intent.getStringExtra("CITY") != null)
-                    user.setCity(intent.getStringExtra("CITY"));
-                if (intent.getStringExtra("COUNTRY") != null)
-                    user.setCountry(intent.getStringExtra("COUNTRY"));
-                if (intent.getStringExtra("DEPARTMENT") != null)
-                    user.setDepartment(intent.getStringExtra("DEPARTMENT"));
-                if (intent.getStringExtra("POSTAL_CODE") != null)
-                    user.setPostalCode(intent.getStringExtra("POSTAL_CODE"));
-                if (intent.getStringExtra("PASSWORD") != null)
-                    user.setPassword(intent.getStringExtra("PASSWORD"));
-
-                user.setAllProfilesCanCreateNewProfile(intent.getBooleanExtra("CAN_CREATE_PROFILE", false));
-
-            }
-
-        }
-    };
 
     private void signUp(User user) {
+        verify(user);
+
+
         Retrofit retrofit = Utils.getInstanceRetrofit();
         UserSignUpRepository repository = retrofit.create(UserSignUpRepository.class);
         Call<ResponseSignUp> call = repository.signUp(user);
@@ -172,11 +150,55 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
                 if (response.isSuccessful()) {
-                    new AlertDialog.Builder(SignUpActivity.this)
-                            .setTitle("Delete entry")
-                            .setMessage("" + response.body())
+                    ResponseSignUp responseSignUp=response.body();
+                    Toast toast= Toast.makeText(SignUpActivity.this,"Sign up with success!\n" +
+                            "logging into your account.",Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER,0,0);
+                    toast.show();
 
-                            .show();
+
+
+
+
+
+                    preferences.setEmailUserPreferences(user.getEmail());
+                    Profile profile=responseSignUp.getMainProfile();
+
+                    Intent intent = new Intent(SignUpActivity.this, EditProfileActivity.class);
+                    intent.putExtra("id", profile.getId());
+                    intent.putExtra("url", profile.getUrlImg());
+                    intent.putExtra("name", profile.getName());
+                    intent.putExtra("pin", profile.getPin());
+                    intent.putExtra("main_profile", profile.getMainProfile());
+                    intent.putExtra("age", profile.getAgeCategory());
+                    intent.putExtra("lang", profile.getDefaultLanguage());
+                    intent.putExtra("MODE","EDIT");
+                    Toast toast2=Toast.makeText(SignUpActivity.this,"almost done.\n Creating your profile.",Toast.LENGTH_LONG);
+                    toast2.show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            preferences.setIdProfile(profile.getId());
+                            startActivity(intent);
+                        }
+                    },2000);
+
+
+
+
+
+
+
+
+                    progressBarSignUp.setVisibility(View.VISIBLE);
+
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            login(user.getEmail(),user.getPassword(),"android samsung j7","Santo domingo");
+                        }
+                    },2000);
+
 
                 } else {
                     try {
@@ -201,6 +223,41 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             }
         });
     }
+    private void login(String email, String pwd, String device, String location) {
+        Retrofit retrofit = Utils.getInstanceRetrofit();
+        UserRepository userRepository = retrofit.create(UserRepository.class);
+        Call<UserLogin.Response> call = userRepository.login(new UserLogin(email, pwd, device, location));
+        call.enqueue(new Callback<UserLogin.Response>() {
+            @Override
+            public void onResponse(Call<UserLogin.Response> call, Response<UserLogin.Response> response) {
+                if(response.isSuccessful()){
+
+                    UserLogin.Response g= response.body();
+
+                    Preferences preferences=Preferences.getPreferenceInstance(SignUpActivity.this);
+                    preferences.setTokenPreferences(g.getToken());
+                    preferences.setEmailUserPreferences(email);
+                    progressBarSignUp.setVisibility(View.GONE);
+                    // new AlertDialog.Builder(LoginActivity.this).setMessage(preferences.getToken()+" token").show();
+
+
+
+                }
+                else {
+                    Toast.makeText(SignUpActivity.this,"Unable to log in automatically, please log in manually.",Toast.LENGTH_LONG).show();
+                    Intent intent=new Intent(SignUpActivity.this, LoginActivity.class);
+                    progressBarSignUp.setVisibility(View.GONE);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserLogin.Response> call, Throwable t) {
+
+
+            }
+        });
+    }
 
     public AlertDialog.Builder alert(String msg) {
         return new AlertDialog.Builder(SignUpActivity.this)
@@ -208,47 +265,57 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                 .setMessage(msg);
     }
 
-    public boolean userIsValid(User user) {
+    public void verifiedAndSiggnUp() {
+        signUpViewModel.getUserLiveData().observe(this, new Observer<User>() {
+            @Override
+            public void onChanged(User user) {
+
+                signUp(user);
+            }
+        });
+
+    }
+
+    public void verify(User user){
         if (user.getAccess() == null) {
             alert("Choose a plan").show();
-            return false;
+            return ;
         }
         if (user.getBirthday() == null) {
-            alert("Enter your birthday").show();
-            return false;
-        }/*
+           /* alert("Enter your birthday").show();
+            return ;*/
+        }
         if (user.getCity() == null) {
             alert("Choose a city").show();
-            return false;
+            return ;
         }
         if (user.getCountry() == null) {
             alert("Choose a country").show();
-            return false;
+            return ;
         }
         if (user.getDepartment() == null) {
             alert("Choose a State").show();
-            return false;
-        }*/
+            return ;
+        }
         if (user.getEmail() == null) {
             alert("Enter a email").show();
-            return false;
+            return ;
         }
         if (user.getPassword() == null) {
             alert("Enter a password").show();
-            return false;
+            return ;
         }
         if (user.getPostalCode() == null) {
             alert("Enter a postal code").show();
-            return false;
+            return ;
         }
         if (user.getTelephone() == null) {
             alert("Enter a telephone number").show();
-            return false;
+            return ;
         }
         if (user.getSex() == null) {
             alert("Enter a Sex").show();
-            return false;
+            return ;
         }
-        return true;
     }
 }

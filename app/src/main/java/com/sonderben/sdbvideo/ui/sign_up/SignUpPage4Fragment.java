@@ -1,10 +1,9 @@
 package com.sonderben.sdbvideo.ui.sign_up;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.localbroadcastmanager.content.LocalBroadcastManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,11 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.material.textfield.TextInputEditText;
+import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.data.model.Country;
 import com.sonderben.sdbvideo.databinding.FragmentSignUpPage4Binding;
 import com.sonderben.sdbvideo.repository.UserSignUpRepository;
@@ -70,80 +71,41 @@ public class SignUpPage4Fragment extends Fragment  {
         binding=FragmentSignUpPage4Binding.inflate(getLayoutInflater());
 
         View root=binding.getRoot();
-         spinnerCountry = binding.spinCountry;
-         spinnerState=binding.spinState;
-         spinnerCity= binding.spinCity;
-         progressBar= binding.pregressBar;
+        signUpViewModel=new ViewModelProvider(this.getActivity()).get(SignUpViewModel.class);
+
+
+
+
+
+
+
+         spinnerCountry = binding.country;
+         spinnerState=binding.department;
+         spinnerCity= binding.city;
+         progressBar= binding.progressBar;
          phoneCode= binding.phoneCode;
-         telephoneCode= binding.phoneCode;
-         telephone= binding.telephone;
-         postalCode=binding.postalCode;
-
-         spinnerCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+         phoneCode.addTextChangedListener(new TextWatcher() {
              @Override
-             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                 if(i>0) {
-                     spinnerState.setEnabled(true);
-                     getCountryDetails( countryList.get(i - 1).getIso2() );
-                     progressBar.setVisibility(View.VISIBLE);
-                     getStatesWithinCountry( countryList.get(i - 1).getIso2() );
+             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-                     intent.putExtra("COUNTRY",(String)spinnerCountry.getSelectedItem());
-                     LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                 }
-                 else{
-                     spinnerState.setEnabled(false);
-                     spinnerCity.setEnabled(false);
-                     phoneCode.setText("+");
-                 }
              }
 
              @Override
-             public void onNothingSelected(AdapterView<?> adapterView) {
+             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
+             }
+
+             @Override
+             public void afterTextChanged(Editable editable) {
+                 String tel=phoneCode.getText().toString().trim()
+                         +telephone.getText().toString().trim();
+                 tel.replace("+","");
+                 signUpViewModel.setUserTelephone(tel);
              }
          });
-        spinnerState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if(i>0){
 
-                    spinnerCity.setEnabled(true);
-                    getCitiesWithinCountryAndState(
-                            countryList.get( spinnerState.getSelectedItemPosition()-1).getIso2(),
-                            stateList.get(i-1).getIso2()
-                    );
-                    intent.putExtra("DEPARTMENT",(String)spinnerState.getSelectedItem());
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-
-                }
-                else {
-                    spinnerCity.setEnabled(false);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-        spinnerCity.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i>0){
-                    intent.putExtra("CITY",(String)spinnerCity.getSelectedItem());
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
-
-        region= binding.region;
-        region.addTextChangedListener(new TextWatcher() {
+         direction=binding.direction;
+        direction.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
@@ -156,55 +118,11 @@ public class SignUpPage4Fragment extends Fragment  {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                intent.putExtra("REGION",region.getText().toString());
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                signUpViewModel.setUserRegion(direction.getText().toString());
             }
         });
-        telephone.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(telephoneCode.getText().toString().trim().length()>0 &&
-                telephone.getText().toString().trim().length()>0){
-                    String tel=telephoneCode.getText().toString().replace("+","").trim()+
-                    telephone.getText().toString().trim();
-                    intent.putExtra("TELEPHONE",tel);
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                }
-            }
-        });
-        telephoneCode.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if(telephoneCode.getText().toString().trim().length()>0 &&
-                        telephone.getText().toString().trim().length()>0){
-
-                    String tel=telephoneCode.getText().toString().replace("+","").trim()+
-                            telephone.getText().toString().trim();
-                    intent.putExtra("TELEPHONE",tel);
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                }
-            }
-        });
+         postalCode= binding.postal;
         postalCode.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -218,28 +136,77 @@ public class SignUpPage4Fragment extends Fragment  {
 
             @Override
             public void afterTextChanged(Editable editable) {
-                if(postalCode.getText().toString().trim().length()>0 ){
-                    intent.putExtra("POSTAL_CODE",postalCode.getText().toString());
-                    LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-                }
+                signUpViewModel.setUserPostalCode(postalCode.getText().toString());
             }
         });
 
-        getCountries();
+         telephone= binding.telephone;
+        telephone.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                signUpViewModel.setUserTelephone(telephone.getText().toString());
+            }
+        });
+
+
+
+        spinnerCountry.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String textView= (String) adapterView.getItemAtPosition(position);
+                signUpViewModel.setUserCountry(textView);
+                positionSelectedItemCountry=position;
+                getStatesWithinCountry( countryList.get( position ).getIso2() );
+                getCountryDetails( countryList.get(position).getIso2() );
+            }
+        });
+
+        spinnerState.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String textView= (String) adapterView.getItemAtPosition(position);
+                getCitiesWithinCountryAndState(countryList.get(positionSelectedItemCountry).getIso2(), stateList.get(position).getIso2() );
+                signUpViewModel.setUserDepartment(textView);
+            }
+        });
+
+        spinnerCity.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
+                String textView= (String) adapterView.getItemAtPosition(position);
+                signUpViewModel.setUserCity(textView);
+            }
+        });
+
+
+getCountries();
         return root;
     }
 
 
     FragmentSignUpPage4Binding binding;
-    Spinner spinnerCountry,spinnerState,spinnerCity;
-    ArrayAdapter<String> adapterSpinnerCountry,adapterSpinnerState,adapterSpinnerCity;
+    AutoCompleteTextView spinnerCountry,spinnerState,spinnerCity;
+
     List<Country> countryList;
     List<Country.State> stateList;
     List<Country.City> cityList;
-    EditText phoneCode,region,telephone,telephoneCode,postalCode;
-    //Country.Detail countryDetail;
+
     ProgressBar progressBar;
-    Intent intent=new Intent("SIGN_UP");
+    SignUpViewModel signUpViewModel;
+    EditText phoneCode;
+    TextInputEditText direction,postalCode,telephone;
+    int positionSelectedItemCountry;
+
 
     private void getCountries() {
         Retrofit retrofit = Utils.getInstanceRetrofitCountryStateCity();
@@ -255,14 +222,22 @@ public class SignUpPage4Fragment extends Fragment  {
 
                     List<Country> accesses=response.body();
                     countryList =accesses;
-                    String []accessName=new String[accesses.size()+1];
-                    accessName[0]="Choose a Country".toUpperCase();
+                    String []accessName=new String[accesses.size()];
+
                     for (int a=0;a<accesses.size();a++){
-                        accessName[a+1]=accesses.get(a).getName().toUpperCase();
+                        accessName[a]=accesses.get(a).getName().toUpperCase();
                     }
-                    adapterSpinnerCountry =new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,accessName);
-                    spinnerCountry.setAdapter(adapterSpinnerCountry);
-                    adapterSpinnerCountry.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+                    ArrayAdapter<String> adapterCountry =
+                            new ArrayAdapter<>(
+                                    SignUpPage4Fragment.this.getContext(),
+                                    R.layout.dropdown_menu_popup_item,
+                                    accessName);
+                    spinnerCountry.setAdapter(adapterCountry);
+
+                    Toast.makeText(SignUpPage4Fragment.this.getContext(),"success ssss",Toast.LENGTH_LONG).show();
+
                     progressBar.setVisibility(View.GONE);
                 }
                 else {
@@ -282,6 +257,7 @@ public class SignUpPage4Fragment extends Fragment  {
         });
     }
     private void getStatesWithinCountry(String iso2Country) {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = Utils.getInstanceRetrofitCountryStateCity();
         UserSignUpRepository repository = retrofit.create(UserSignUpRepository.class);
         Call<List<Country.State>> call = repository.getStatesWithinCountry(iso2Country);
@@ -295,14 +271,19 @@ public class SignUpPage4Fragment extends Fragment  {
 
                     List<Country.State> states=response.body();
                     stateList=states;
-                    String []accessName=new String[states.size()+1];
-                    accessName[0]="Choose a State".toUpperCase();
+                    String []accessName=new String[states.size()];
+
                     for (int a=0;a<states.size();a++){
-                        accessName[a+1]=states.get(a).getName().toUpperCase();
+                        accessName[a]=states.get(a).getName().toUpperCase();
                     }
-                    adapterSpinnerState =new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,accessName);
-                    spinnerState.setAdapter(adapterSpinnerState);
-                    adapterSpinnerState.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<String> adapterState =
+                            new ArrayAdapter<>(
+                                    SignUpPage4Fragment.this.getContext(),
+                                    R.layout.dropdown_menu_popup_item,
+                                    accessName);
+                    spinnerState.setAdapter(adapterState);
+
+                    Toast.makeText(SignUpPage4Fragment.this.getContext(),"success state",Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                 }
                 else {
@@ -322,6 +303,7 @@ public class SignUpPage4Fragment extends Fragment  {
         });
     }
     private void getCitiesWithinCountryAndState(String iso2Country,String iso2State) {
+        progressBar.setVisibility(View.VISIBLE);
         Retrofit retrofit = Utils.getInstanceRetrofitCountryStateCity();
         UserSignUpRepository repository = retrofit.create(UserSignUpRepository.class);
         Call<List<Country.City>> call = repository.getCityWithinCountryAndState(iso2Country,iso2State);
@@ -335,16 +317,20 @@ public class SignUpPage4Fragment extends Fragment  {
 
                     List<Country.City> states=response.body();
                     cityList=states;
-                    String []accessName=new String[states.size()+1];
+                    String []accessName=new String[states.size()];
                     Toast.makeText(SignUpPage4Fragment.this.getContext(),"size: "
                             +accessName.length,Toast.LENGTH_LONG).show();
-                    accessName[0]="Choose a City".toUpperCase();
                     for (int a=0;a<states.size();a++){
-                        accessName[a+1]=states.get(a).getName().toUpperCase();
+                        accessName[a]=states.get(a).getName().toUpperCase();
                     }
-                    adapterSpinnerCity =new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item,accessName);
-                    spinnerCity.setAdapter(adapterSpinnerCity);
-                    adapterSpinnerCity.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    ArrayAdapter<String> adapterCity =
+                            new ArrayAdapter<>(
+                                    SignUpPage4Fragment.this.getContext(),
+                                    R.layout.dropdown_menu_popup_item,
+                                    accessName);
+                    spinnerCity.setAdapter(adapterCity);
+
+                    Toast.makeText(SignUpPage4Fragment.this.getContext(),"success city",Toast.LENGTH_LONG).show();
                     progressBar.setVisibility(View.GONE);
                 }
                 else {

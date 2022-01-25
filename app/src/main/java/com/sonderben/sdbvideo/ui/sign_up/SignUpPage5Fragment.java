@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import android.text.Editable;
@@ -58,8 +59,12 @@ public class SignUpPage5Fragment extends Fragment {
         // Inflate the layout for this fragment
         binding=FragmentSignUpPage5Binding.inflate(getLayoutInflater());
         password= binding.password;
+
+        signUpViewModel=new ViewModelProvider(this.getActivity()).get(SignUpViewModel.class);
+
+
         confirmPassword= binding.confirmPassword;
-        isAllProfileCanCreateProfiles=binding.canCreateProfile;
+
         password.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -75,8 +80,7 @@ public class SignUpPage5Fragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if(password.getText().toString().trim().length()>3){
                     if(password.getText().toString().trim().equals(confirmPassword.getText().toString().trim())){
-                        intent.putExtra("PASSWORD",password.getText().toString());
-                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+                       signUpViewModel.setUserPassword(password.getText().toString());
                     }
 
                 }
@@ -97,25 +101,20 @@ public class SignUpPage5Fragment extends Fragment {
             public void afterTextChanged(Editable editable) {
                 if(password.getText().toString().trim().length()>3){
                     if(password.getText().toString().trim().equals(confirmPassword.getText().toString().trim())){
-                        intent.putExtra("PASSWORD",password.getText().toString());
-                        LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
+
+                        signUpViewModel.setUserPassword(password.getText().toString());
                     }
 
                 }
             }
         });
-        isAllProfileCanCreateProfiles.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                intent.putExtra("CAN_CREATE_PROFILE",b);
-                LocalBroadcastManager.getInstance(getActivity()).sendBroadcast(intent);
-            }
-        });
+
         View root=binding.getRoot();
         return root;
     }
-    Intent intent=new Intent("SIGN_UP");
+
     FragmentSignUpPage5Binding binding;
     EditText password,confirmPassword;
     CheckBox isAllProfileCanCreateProfiles;
+    SignUpViewModel signUpViewModel;
 }

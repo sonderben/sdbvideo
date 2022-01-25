@@ -6,6 +6,7 @@ import java.util.List;
 public class ResponseSignUp {
     Long id;
     String email;
+    Profile mainProfile;
 
     public Long getId() {
         return id;
@@ -31,8 +32,17 @@ public class ResponseSignUp {
         this.email = email;
     }
 
-    public ResponseSignUp(Long id, String email) {
+    public Profile getMainProfile() {
+        return mainProfile;
+    }
+
+    public void setMainProfile(Profile mainProfile) {
+        this.mainProfile = mainProfile;
+    }
+
+    public ResponseSignUp(Long id, String email, Profile mainProfile) {
         this.id = id;
         this.email = email;
+        this.mainProfile = mainProfile;
     }
 }

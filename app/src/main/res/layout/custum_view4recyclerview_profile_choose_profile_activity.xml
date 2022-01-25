@@ -4,13 +4,19 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <ImageView
-        android:id="@+id/profile_foto"
-        android:layout_width="@dimen/_120sdp"
-        android:layout_height="@dimen/_120sdp"
-        android:transitionName="imgprofile"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/lay_profile_foto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"/>
+        app:layout_constraintLeft_toLeftOf="parent">
+        <ImageView
+            android:id="@+id/profile_foto"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="@dimen/_120sdp"
+            android:transitionName="imgprofile"/>
+    </com.google.android.material.card.MaterialCardView>
     <TextView
         android:id="@+id/profile_nam"
         android:layout_width="0dp"
@@ -21,17 +27,17 @@
         android:textSize="@dimen/_16sdp"
         android:textColor="@color/white"
         android:maxLines="1"
-        app:layout_constraintTop_toBottomOf="@+id/profile_foto"
-        app:layout_constraintLeft_toLeftOf="@+id/profile_foto"
-        app:layout_constraintRight_toRightOf="@+id/profile_foto"/>
+        app:layout_constraintTop_toBottomOf="@+id/lay_profile_foto"
+        app:layout_constraintLeft_toLeftOf="@+id/lay_profile_foto"
+        app:layout_constraintRight_toRightOf="@+id/lay_profile_foto"/>
     <View
         android:layout_width="@dimen/_5sdp"
         android:layout_height="@dimen/_2sdp"
-        app:layout_constraintTop_toTopOf="@+id/profile_foto"
-        app:layout_constraintLeft_toRightOf="@+id/profile_foto"/>
+        app:layout_constraintTop_toTopOf="@+id/lay_profile_foto"
+        app:layout_constraintLeft_toRightOf="@+id/lay_profile_foto"/>
     <View
         android:layout_width="@dimen/_5sdp"
         android:layout_height="@dimen/_2sdp"
-        app:layout_constraintTop_toBottomOf="@+id/profile_foto"
-        app:layout_constraintLeft_toLeftOf="@+id/profile_foto"/>
+        app:layout_constraintTop_toBottomOf="@+id/lay_profile_foto"
+        app:layout_constraintLeft_toLeftOf="@+id/lay_profile_foto"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

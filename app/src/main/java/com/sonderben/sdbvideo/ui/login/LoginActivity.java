@@ -121,10 +121,10 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void login(String email, String pwd, String device, String location) {
-        Retrofit retrofit = new Retrofit.Builder()//192.168.0.103
+        Retrofit retrofit = Utils.getInstanceRetrofit(); /*new Retrofit.Builder()//192.168.0.103
                 .baseUrl(Utils.baseurl)
                 .addConverterFactory(GsonConverterFactory.create())
-                .build();
+                .build();*/
         UserRepository userRepository = retrofit.create(UserRepository.class);
         Call<UserLogin.Response> call = userRepository.login(new UserLogin(email, pwd, device, location));
         call.enqueue(new Callback<UserLogin.Response>() {
