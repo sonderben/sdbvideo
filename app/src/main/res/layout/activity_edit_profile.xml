@@ -38,7 +38,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="Delete"
-        android:visibility="gone"
         android:padding="@dimen/_5sdp"
         android:textSize="@dimen/_16sdp"
         android:textColor="@color/white"

@@ -57,7 +57,7 @@
                             android:imeOptions="actionDone"
                             android:selectAllOnFocus="true"
                             android:inputType="textPassword"
-                            android:text="!12f3A3%456"
+
                             android:textColor="@color/white"
                             android:textColorHint="@color/white" />
                     </com.google.android.material.textfield.TextInputLayout>
@@ -88,7 +88,6 @@
                             android:imeOptions="actionDone"
                             android:selectAllOnFocus="true"
                             android:inputType="textPassword"
-                            android:text="!12f3A3%456"
                             android:textColor="@color/white"
                             android:textColorHint="@color/white" />
                     </com.google.android.material.textfield.TextInputLayout>

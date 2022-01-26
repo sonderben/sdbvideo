@@ -16,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.data.model.Profile;
-import com.sonderben.sdbvideo.ui.choose_profile.EditProfileViewModel;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,27 +27,29 @@ public class AdapterImagesEditProfileActivity extends RecyclerView.Adapter<Adapt
     List<Profile.Image> images;
     AlertDialog dialog;
     Activity activity;
-    EditProfileViewModel editProfileViewModel;
     LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
 
-    public AdapterImagesEditProfileActivity(Activity activity,List<Profile.Image>images,AlertDialog dialog){
-        this.activity=activity;
-        this.dialog=dialog;
-        editProfileViewModel=new ViewModelProvider((ViewModelStoreOwner) activity).get(EditProfileViewModel.class);
-        this.images =images;
+    String urlImg=null;
+
+    public AdapterImagesEditProfileActivity(Activity activity, List<Profile.Image> images, AlertDialog dialog) {
+        this.activity = activity;
+        this.dialog = dialog;
+        this.images = images;
+    }
+    public String getUrlImg(){
+        return urlImg;
     }
 
     @NonNull
     @NotNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
-        View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.custum_list_images_item,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custum_list_images_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull @NotNull AdapterImagesEditProfileActivity.ViewHolder holder, int position) {
-
 
 
         Picasso.get()
@@ -58,21 +59,18 @@ public class AdapterImagesEditProfileActivity extends RecyclerView.Adapter<Adapt
                 .into(holder.image);
 
 
+        holder.itemView.setOnClickListener(x -> {
 
-        holder.itemView.setOnClickListener(x->{
 
-editProfileViewModel.setUrlPicture(images.get(position).getUrl());
+            urlImg=images.get(position).getUrl();
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                   dialog.cancel();
-                }
-            }, 1000);
+
+                    dialog.cancel();
+
         });
 
 
-        if(position==images.size()-1){
+        if (position == images.size() - 1) {
             lp.setMargins(0, 0, 20, 0);
             holder.itemView.setLayoutParams(lp);
         }
@@ -91,7 +89,7 @@ editProfileViewModel.setUrlPicture(images.get(position).getUrl());
 
         public ViewHolder(@NonNull @NotNull View itemView) {
             super(itemView);
-            image=itemView.findViewById(R.id.image);
+            image = itemView.findViewById(R.id.image);
 
 
         }

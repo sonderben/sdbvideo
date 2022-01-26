@@ -52,7 +52,7 @@
                             android:imeActionLabel="@string/action_sign_in_short"
                             android:imeOptions="actionDone"
                             android:selectAllOnFocus="true"
-                            android:text="12 / 02 / 2014"
+                            android:text="Click to edit"
                             android:textColor="@color/white"
                             android:textColorHint="@color/white" />
                     </com.google.android.material.textfield.TextInputLayout>

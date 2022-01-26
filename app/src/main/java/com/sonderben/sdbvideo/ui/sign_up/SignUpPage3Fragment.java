@@ -118,9 +118,9 @@ public class SignUpPage3Fragment extends Fragment {
                     datePickerDialog.show();
                     birthday.clearFocus();
 
-                    /*InputMethodManager imgr= (InputMethodManager) SignUpPage3Fragment.this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    InputMethodManager imgr= (InputMethodManager) SignUpPage3Fragment.this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                    imgr.hideSoftInputFromWindow(birthday.getApplicationWindowToken(),0);*/
+                    imgr.hideSoftInputFromWindow(birthday.getApplicationWindowToken(),0);
                 }
             }
         });
@@ -151,7 +151,7 @@ public class SignUpPage3Fragment extends Fragment {
 
         ArrayAdapter<String> adapter =
                 new ArrayAdapter<>(
-                        this.getContext(),
+                        this.getActivity().getBaseContext(),
                         R.layout.dropdown_menu_popup_item,
                         type);
 

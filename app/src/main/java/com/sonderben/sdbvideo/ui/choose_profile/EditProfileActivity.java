@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -20,9 +21,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.sonderben.sdbvideo.MainActivity2;
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.SplashScreenActivity;
 import com.sonderben.sdbvideo.VideoPlayerActivity;
@@ -37,6 +40,7 @@ import com.sonderben.sdbvideo.utils.Preferences;
 import com.sonderben.sdbvideo.utils.Utils;
 import com.squareup.picasso.Picasso;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,69 +64,82 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         profileAge = binding.profileAge;
         ageLayout = binding.layProfileAge;
         iconEdit = binding.iconEdit;
-        editProfileViewModel = new ViewModelProvider(this)
-                .get(EditProfileViewModel.class);
 
-        //intent.putExtra("MODE","CREATE");
 
         imgProfile.setOnClickListener(this::onClick);
         iconEdit.setOnClickListener(this::onClick);
         Intent intent = getIntent();
+        preferences = Preferences.getPreferenceInstance(this);
 
         if (intent.getStringExtra("MODE").equals("EDIT")) {
-
+            save.setText("Update");
             idProfile = intent.getLongExtra("id", -1);
-            //idProfile=idProfile.equals(-1L)?null:idProfile;
-            url = intent.getStringExtra("url");
-            String name = intent.getStringExtra("name");
-            String pin = intent.getStringExtra("pin");
+            tryUrl = intent.getStringExtra("url");
+             name = intent.getStringExtra("name");
+             pin = intent.getStringExtra("pin");
             boolean isMainProfile = intent.getBooleanExtra("main_profile", false);
-            int age = intent.getIntExtra("age", -1);
+             age = intent.getIntExtra("age", -1);
             String lang = intent.getStringExtra("lang");
 
-            Picasso.get()
-                    .load(url)
-                    .fit()
-                    .centerCrop()
-                    .into(imgProfile);
-            profileName.setText(name);
-            profilePine.setText(pin);
-            profileAge.setText("+" + age);
-            if (!isMainProfile) {
+            Toast.makeText(this,"ismain: "+isMainProfile,Toast.LENGTH_LONG).show();
+            setViewsForEdit();
+
+            if(preferences.getIsMainProfilesPreferences()){
+                if(isMainProfile)
+                    delete.setVisibility(View.GONE);
+                if(!preferences.getIdProfile().equals(idProfile)){
+                    imgProfile.setEnabled(false);
+                    iconEdit.setEnabled(false);
+                    profileName.setEnabled(false);
+                    profileName.setFocusable(false);
+                    profilePine.setEnabled(false);
+                    profilePine.setFocusable(false);
+                }
+            }
+
+
+            /*if (!isMainProfile) {
                 profileAge.setEnabled(false);
-                //profileAge.setError("You don't have permission to edit it");
                 ageLayout.setHelperText("You don't have the permission to edit this field");
 
             }
-            if (isMainProfile)
+            if (isMainProfile) {
                 delete.setVisibility(View.GONE);
+
+            }
             else
                 delete.setVisibility(View.VISIBLE);
-            save.setText("Update");
+            save.setText("Update");*/
         } else if (intent.getStringExtra("MODE").equals("CREATE")) {
             profileName.setText("");
             profileAge.setText("+18");
             profilePine.setText("");
+            delete.setEnabled(false);
         }
 
         DisplayMetrics mDisplayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
-        float mHeightScreen = mDisplayMetrics.heightPixels;
-        float mWidthScreen = mDisplayMetrics.widthPixels;
-        Preferences preferences = Preferences.getPreferenceInstance(this);
+
+
 
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+
                 Profile profile = new Profile();
                 profile.setId(idProfile);
                 profile.setName(profileName.getText().toString());
                 profile.setAgeCategory(Integer.valueOf(profileAge.getText().toString()));
                 profile.setDefaultLanguage("En");
                 profile.setPin(profilePine.getText().toString());
-                profile.setUrlImg(editProfileViewModel.getUrLiveData().getValue());
+
+
+                profile.setUrlImg(tryUrl);
+
                 postProfile(preferences.getIdProfile(), profile, preferences.getToken());
-                //onBackPressed();
+
+
             }
         });
         delete.setOnClickListener(x -> {
@@ -133,7 +150,18 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 @Override
                 public void onResponse(Call<Profile> call, Response<Profile> response) {
                     if (response.isSuccessful()) {
-                        EditProfileActivity.this.finish();
+
+                        if (preferences.getIdProfile().equals(idProfile)) {
+                            preferences.setIdProfile(-1L);
+
+                            Intent intent1 = new Intent(EditProfileActivity.this, SplashScreenActivity.class);
+                            EditProfileActivity.this.startActivity(intent1);
+                            EditProfileActivity.this.finishAffinity();
+                        } else {
+                            setResult(RESULT_OK);
+                            EditProfileActivity.this.finish();
+                        }
+
                     } else
                         try {
                             new AlertDialog.Builder(EditProfileActivity.this).setMessage(response.errorBody().string()).show();
@@ -148,14 +176,18 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 }
             });
 
-            if(preferences.getIdProfile().equals(idProfile)){
-                preferences.setIdProfile(-1L);
-                //Utils.signOut(EditProfileActivity.this);
-                Intent intent1=new Intent(EditProfileActivity.this, SplashScreenActivity.class);
-                EditProfileActivity.this.startActivity(intent1);
-                EditProfileActivity.this.finish();
-            }
         });
+    }
+
+    private void setViewsForEdit() {
+        Picasso.get()
+                .load(tryUrl)
+                .fit()
+                .centerCrop()
+                .into(imgProfile);
+        profileName.setText(name);
+        profilePine.setText(pin);
+        profileAge.setText("+" + age);
     }
 
     ActivityEditProfileBinding binding;
@@ -163,14 +195,21 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
     TextInputLayout ageLayout;
     ImageView imgProfile, iconEdit;
     TextView save, delete;
-    String url = null;
-    EditProfileViewModel editProfileViewModel;
+    Preferences preferences;
+
+
     Long idProfile;
+    AdapterImagesEditProfileActivity[] adapter;
+    String tryUrl;
+    String name;
+    String pin;
+    int age;
 
     @Override
     public void onClick(View view) {
+
         if (view.equals(imgProfile) || view.equals(iconEdit)) {
-            getAllImageProfile(url);
+            getAllImageProfile(tryUrl);
         }
 
     }
@@ -183,11 +222,29 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(Call<List<Profile.Image>> call, Response<List<Profile.Image>> response) {
                 if (response.isSuccessful()) {
-                    //new AlertDialog.Builder(EditProfileActivity.this).setMessage("m laaaaa").show();
-                    getImages(response.body(), urlProfilePicture).show();
+                    AlertDialog alertDialog = getImages(response.body(), urlProfilePicture);
+                    alertDialog.show();
+
+                    alertDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialogInterface) {
+                            for (int i = 0; i < adapter.length; i++) {
+                                if (adapter[i].getUrlImg() != null) {
+                                    tryUrl = adapter[i].getUrlImg();
+
+                                    Picasso.get()
+                                            .load(tryUrl)
+                                            .fit()
+                                            .centerCrop()
+                                            .into(imgProfile);
+
+                                    break;
+                                }
+                            }
+                        }
+                    });
                 }
-                //else
-                //new AlertDialog.Builder(EditProfileActivity.this).setMessage("error m laaaaa").show();
+
             }
 
             @Override
@@ -214,8 +271,10 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         root.setOrientation(LinearLayout.VERTICAL);
         TextView[] category = new TextView[categoryImage.size()];
         RecyclerView[] recyclerView = new RecyclerView[categoryImage.size()];
+        adapter = new AdapterImagesEditProfileActivity[categoryImage.size()];
 
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+
 
         for (int a = 0; a < categoryImage.size(); a++) {
             imageListTemp = new ArrayList<>(10);
@@ -233,7 +292,8 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
                 if (images.get(j).getCategory().trim().equals(categoryImage.get(a)))
                     imageListTemp.add(images.get(j));
             }
-            recyclerView[a].setAdapter(new AdapterImagesEditProfileActivity(EditProfileActivity.this, imageListTemp, alertDialog));
+            adapter[a] = new AdapterImagesEditProfileActivity(EditProfileActivity.this, imageListTemp, alertDialog);
+            recyclerView[a].setAdapter(adapter[a]);
             recyclerView[a].setLayoutManager(new LinearLayoutManager(EditProfileActivity.this, RecyclerView.HORIZONTAL, false));
             root.addView(recyclerView[a]);
         }
@@ -242,16 +302,11 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
         alertDialog.getWindow().setLayout((int) (700), (int) (900));
         alertDialog.setOnDismissListener(dialogInterface -> {
 
-            editProfileViewModel.getUrLiveData().observe(EditProfileActivity.this, new Observer<String>() {
-                @Override
-                public void onChanged(String s) {
-                    Picasso.get()
-                            .load(s)
-                            .fit()
-                            .centerCrop()
-                            .into(imgProfile);
-                }
-            });
+            Picasso.get()
+                    .load(tryUrl)
+                    .fit()
+                    .centerCrop()
+                    .into(imgProfile);
         });
         alertDialog.setView(root);
 
@@ -270,7 +325,18 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onResponse(Call<Profile> call, Response<Profile> response) {
                 if (response.isSuccessful()) {
+                    int act = getIntent().getIntExtra("ACTIVITY", -1);
+
+                    if (act == 11) {
+
+                        startActivity(new Intent(EditProfileActivity.this, MainActivity2.class));
+                        EditProfileActivity.this.finish();
+                        return;
+                    }
+                    setResult(RESULT_OK);
+                    //Toast.makeText(EditProfileActivity.this,"act: "+act,Toast.LENGTH_LONG).show();
                     EditProfileActivity.this.finish();
+
                 } else {
                     try {
                         new AlertDialog.Builder(EditProfileActivity.this).setMessage(response.errorBody().string()).show();
@@ -286,31 +352,6 @@ public class EditProfileActivity extends AppCompatActivity implements View.OnCli
             }
         });
     }
-    /*public  void putProfile(Long idProfile,Profile profile,String token){
-        Retrofit retrofit=Utils.getInstanceRetrofit();
-        ProfileRepository repository=retrofit.create(ProfileRepository.class);
-        Call<Profile>profileCall=repository.saveProfile(idProfile,profile,"Bearer "+token);
-        profileCall.enqueue(new Callback<Profile>() {
-            @Override
-            public void onResponse(Call<Profile> call, Response<Profile> response) {
-                if(response.isSuccessful()){
-                    EditProfileActivity.this.finish();
-                }
-                else {
-                    try {
-                        new AlertDialog.Builder(EditProfileActivity.this).setMessage(response.errorBody().string()).show();
-                    }catch (Exception e){
-
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<Profile> call, Throwable t) {
-                new AlertDialog.Builder(EditProfileActivity.this).setMessage(t.getMessage()).show();
-            }
-        });
-    }*/
 
 
 }

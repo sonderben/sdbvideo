@@ -1,5 +1,6 @@
 package com.sonderben.sdbvideo.ui.me;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.adapter.AdapterProfile4ChooseProfileActivity;
@@ -27,6 +29,7 @@ import com.sonderben.sdbvideo.data.model.Profile;
 import com.sonderben.sdbvideo.databinding.FragmentMeBinding;
 import com.sonderben.sdbvideo.repository.ProfileRepository;
 import com.sonderben.sdbvideo.ui.choose_profile.ChooseProfileActivity;
+import com.sonderben.sdbvideo.ui.choose_profile.EditProfileActivity;
 import com.sonderben.sdbvideo.ui.login.LoginActivity;
 import com.sonderben.sdbvideo.utils.Preferences;
 import com.sonderben.sdbvideo.utils.Utils;
@@ -76,36 +79,38 @@ public class MeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+
         binding=FragmentMeBinding.inflate(getLayoutInflater());
         View root=binding.getRoot();
         recyclerView=binding.recyclerview;
         listView=binding.listview;
 
 
-        Preferences preferences=Preferences.getPreferenceInstance(MeFragment.this.getContext());
-        getAllProfiles(preferences.getEmailUser(), preferences.getToken());
+        preferences=Preferences.getPreferenceInstance(MeFragment.this.getContext());
         String[]strings={"My list","App parameter","Account","Sign out"};
         listView.setAdapter(new Adapter(strings));
 
-        /*signOut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
 
-                Intent intent=new Intent(MeFragment.this.getContext(), LoginActivity.class);
-                startActivity(intent);
-                MeFragment.this.getActivity().finish();
-            }
-        });*/
+        getAllProfiles(preferences.getEmailUser(), preferences.getToken());
         return root;
     }
     FragmentMeBinding binding;
     RecyclerView recyclerView;
     AdapterProfile4MeFragmen adapter;
     ListView listView;
+    Preferences preferences;
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable @org.jetbrains.annotations.Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode ==176 && resultCode ==Activity.RESULT_OK){
+            getAllProfiles(preferences.getEmailUser(), preferences.getToken());
+        }
+    }
 
 
-    public void getAllProfiles(String email,String token){
+
+    public void getAllProfiles(String email, String token){
         Retrofit retrofit= Utils.getInstanceRetrofit();
         ProfileRepository repository= retrofit.create(ProfileRepository.class);
         Call<List<Profile>> profiles=repository.getProfiles(email,"Bearer "+token);
@@ -114,7 +119,7 @@ public class MeFragment extends Fragment {
             public void onResponse(Call<List<Profile>> call, Response<List<Profile>> response) {
                 if(response.isSuccessful()){
                     List<Profile>tempProfiles=response.body();
-                    adapter=new AdapterProfile4MeFragmen(tempProfiles,requireActivity());
+                    adapter=new AdapterProfile4MeFragmen(tempProfiles,MeFragment.this);
                     recyclerView.setAdapter(adapter);
                     recyclerView.setLayoutManager(new LinearLayoutManager(MeFragment.this.getContext(),LinearLayoutManager.HORIZONTAL,false));
                 }else{
@@ -169,8 +174,9 @@ public class MeFragment extends Fragment {
                 if (position==SIGN_OUT){
                     Intent intent=new Intent(MeFragment.this.getContext(),LoginActivity.class);
                     MeFragment.this.getActivity().startActivity(intent);
-                    MeFragment.this.getActivity().finish();
                     Utils.signOut(MeFragment.this.getContext());
+                    MeFragment.this.getActivity().finishAffinity();
+
                 }
             });
             return convertView;

@@ -46,9 +46,9 @@
                             android:id="@+id/email"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:inputType="textEmailAddress"
                             android:textColorHint="@color/white"
-                            android:textColor="@color/white"
-                            android:text="q@gmail.com"/>
+                            android:textColor="@color/white" />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
                             android:inputType="textCapWords"
                             android:textColorHint="@color/white"
                             android:textColor="@color/white"
-                            android:text="Ben"/>
+                            />
                     </com.google.android.material.textfield.TextInputLayout>
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"
@@ -96,7 +96,7 @@
                             android:inputType="textCapWords"
                             android:textColorHint="@color/white"
                             android:textColor="@color/white"
-                            android:text="der"/>
+                            />
                     </com.google.android.material.textfield.TextInputLayout>
                 </LinearLayout>
 

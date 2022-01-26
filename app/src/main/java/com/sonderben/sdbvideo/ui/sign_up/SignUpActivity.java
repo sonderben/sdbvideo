@@ -118,6 +118,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     SignUpViewModel signUpViewModel;
     ProgressBar progressBarSignUp;
 
+    Profile mainProfileOfSignUpUser;
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -162,26 +164,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
 
                     preferences.setEmailUserPreferences(user.getEmail());
-                    Profile profile=responseSignUp.getMainProfile();
+                     mainProfileOfSignUpUser=responseSignUp.getMainProfile();
 
-                    Intent intent = new Intent(SignUpActivity.this, EditProfileActivity.class);
-                    intent.putExtra("id", profile.getId());
-                    intent.putExtra("url", profile.getUrlImg());
-                    intent.putExtra("name", profile.getName());
-                    intent.putExtra("pin", profile.getPin());
-                    intent.putExtra("main_profile", profile.getMainProfile());
-                    intent.putExtra("age", profile.getAgeCategory());
-                    intent.putExtra("lang", profile.getDefaultLanguage());
-                    intent.putExtra("MODE","EDIT");
-                    Toast toast2=Toast.makeText(SignUpActivity.this,"almost done.\n Creating your profile.",Toast.LENGTH_LONG);
-                    toast2.show();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            preferences.setIdProfile(profile.getId());
-                            startActivity(intent);
-                        }
-                    },2000);
+
 
 
 
@@ -240,6 +225,32 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     progressBarSignUp.setVisibility(View.GONE);
                     // new AlertDialog.Builder(LoginActivity.this).setMessage(preferences.getToken()+" token").show();
 
+                    /////////////////////////////////////////////////////////////////////////////////
+
+
+                    Intent intent = new Intent(SignUpActivity.this, EditProfileActivity.class);
+                    intent.putExtra("id", mainProfileOfSignUpUser.getId());
+                    intent.putExtra("url", mainProfileOfSignUpUser.getUrlImg());
+                    intent.putExtra("name", mainProfileOfSignUpUser.getName());
+                    intent.putExtra("pin", mainProfileOfSignUpUser.getPin());
+                    intent.putExtra("main_profile", mainProfileOfSignUpUser.getMainProfile());
+                    intent.putExtra("age", mainProfileOfSignUpUser.getAgeCategory());
+                    intent.putExtra("lang", mainProfileOfSignUpUser.getDefaultLanguage());
+                    intent.putExtra("MODE","EDIT");
+                    intent.putExtra("ACTIVITY",11);
+                    Toast toast2=Toast.makeText(SignUpActivity.this,"almost done.\n Creating your profile.",Toast.LENGTH_LONG);
+                    toast2.show();
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            preferences.setIdProfile(mainProfileOfSignUpUser.getId());
+                            startActivity(intent);
+                            finishAffinity();
+                        }
+                    },2000);
+
+
+                    /////////////////////////////////////////////////////////////////////////////////
 
 
                 }

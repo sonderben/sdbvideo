@@ -2,28 +2,23 @@ package com.sonderben.sdbvideo.adapter;
 
 import android.app.Activity;
 import android.app.ActivityOptions;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import androidx.fragment.app.Fragment;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.sonderben.sdbvideo.MainActivity2;
 import com.sonderben.sdbvideo.R;
 import com.sonderben.sdbvideo.data.model.Profile;
 import com.sonderben.sdbvideo.ui.choose_profile.EditProfileActivity;
 import com.sonderben.sdbvideo.ui.choose_profile.EnterPinActivity;
 import com.sonderben.sdbvideo.utils.Preferences;
-import com.sonderben.sdbvideo.utils.Utils;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
@@ -33,12 +28,12 @@ import java.util.List;
 public class AdapterProfile4MeFragmen extends RecyclerView.Adapter<AdapterProfile4MeFragmen.ViewHolder> {
 
     List<Profile> profiles;
-    Activity activity;
+    Fragment fragment;
     Preferences preferences;
-    public AdapterProfile4MeFragmen(List<Profile>episodes,Activity activity){
-        this.activity=activity;
+    public AdapterProfile4MeFragmen(List<Profile>episodes,Fragment activity){
+        this.fragment =activity;
         this.profiles =episodes;
-        preferences=Preferences.getPreferenceInstance(activity);
+        preferences=Preferences.getPreferenceInstance(fragment.getContext());
     }
     @NonNull
     @NotNull
@@ -68,12 +63,13 @@ public class AdapterProfile4MeFragmen extends RecyclerView.Adapter<AdapterProfil
 
                     if( !preferences.getIsMainProfilesPreferences() && preferences.getIdProfile().longValue() != profiles.get(position).getId().longValue() ) {
 
-                        Toast.makeText(activity,"You don't have the permission to change this profile.",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(fragment.getContext(),"You don't have the permission to change this profile.",Toast.LENGTH_SHORT).show();
 
 
                     }
                     else {
-                        Intent intent = new Intent(activity, EditProfileActivity.class);
+                        Intent intent = new Intent(fragment.getContext(), EditProfileActivity.class);
+
                     intent.putExtra("id", profiles.get(position).getId());
                     intent.putExtra("url", profiles.get(position).getUrlImg());
                     intent.putExtra("name", profiles.get(position).getName());
@@ -82,14 +78,15 @@ public class AdapterProfile4MeFragmen extends RecyclerView.Adapter<AdapterProfil
                     intent.putExtra("age", profiles.get(position).getAgeCategory());
                     intent.putExtra("lang", profiles.get(position).getDefaultLanguage());
                     intent.putExtra("MODE","EDIT");
-                    activity.startActivity(intent);
+                    //activity.startActivity(intent);
+                    fragment.startActivityForResult(intent,176);
                     }
                     return true;
                 }
             });
             holder.itemView.setOnClickListener(x->{
                 if( !profiles.get(position).getId().equals(preferences.getIdProfile()) ){
-                    Intent intent=new Intent(activity, EnterPinActivity.class);
+                    Intent intent=new Intent(fragment.getContext(), EnterPinActivity.class);
 
 
                     intent.putExtra("name",profiles.get(position).getName());
@@ -105,15 +102,16 @@ public class AdapterProfile4MeFragmen extends RecyclerView.Adapter<AdapterProfil
                     pairs[1]=new Pair<View,String>(holder.profileName,"profilename");
 
 
-                    ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(activity,pairs);
+                    ActivityOptions options=ActivityOptions.makeSceneTransitionAnimation(fragment.requireActivity(),pairs);
 
 
 
-                    activity.startActivity(intent,options.toBundle());
+                    fragment.startActivity(intent,options.toBundle());
+
 
                     return;
                 }
-                Toast.makeText(activity,"You are already connected to this profile",Toast.LENGTH_SHORT).show();
+                Toast.makeText(fragment.getContext(),"You are already connected to this profile",Toast.LENGTH_SHORT).show();
 
             });
 
@@ -122,11 +120,12 @@ public class AdapterProfile4MeFragmen extends RecyclerView.Adapter<AdapterProfil
 
         else{
             holder.profileName.setText("New Profile");
-            holder.profilePhoto.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_add_30));
+            holder.profilePhoto.setImageDrawable(fragment.getResources().getDrawable(R.drawable.ic_add_30));
             holder.itemView.setOnClickListener(x->{
-                Intent intent = new Intent(activity, EditProfileActivity.class);
+                Intent intent = new Intent(fragment.getContext(), EditProfileActivity.class);
                 intent.putExtra("MODE","CREATE");
-                activity.startActivity(intent);
+                //fragment.startActivity(intent);
+                fragment.startActivityForResult(intent,176);
             });
             //holder.profilePhoto.setBackgroundColor();
 
