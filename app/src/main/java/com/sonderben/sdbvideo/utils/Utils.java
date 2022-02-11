@@ -3,12 +3,14 @@ package com.sonderben.sdbvideo.utils;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.os.Build;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 
+import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import retrofit2.Retrofit;
@@ -16,7 +18,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class Utils {
 //192.168.147.239
-    public final static String ip="192.168.0.101";
+    public final static String ip="192.168.0.102";
     //192.168.0.101
     public final static String baseurl="http://"+ip+":8080/api/v1/";
     private final static String baseUrlCountryStateCity="https://api.countrystatecity.in/v1/";
@@ -153,5 +155,13 @@ public class Utils {
         Preferences preferences=Preferences.getPreferenceInstance(context);
         preferences.setTokenPreferences("");
         preferences.setIdProfile(-1L);
+    }
+    public static Locale getCurrentLocale(Context context){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N){
+            return context.getResources().getConfiguration().getLocales().get(0);
+        } else{
+            //noinspection deprecation
+            return context.getResources().getConfiguration().locale;
+        }
     }
 }

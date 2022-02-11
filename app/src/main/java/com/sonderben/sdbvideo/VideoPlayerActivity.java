@@ -58,7 +58,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         mEpo = findViewById(R.id.epo);
         mSubtitle = findViewById(R.id.sub);
 
-        String urlFilm="https://ejemploht.s3.us-east-2.amazonaws.com/ils+on+fait+l+amerique/Ils+ont+fait+l_Am%C3%A9rique+1l8+Une+nouvelle+%C3%A8re.mp4";//getIntent().getStringExtra("URL_FILM");
+        String urlFilm=getIntent().getStringExtra("URL_FILM");
         playVideo2(urlFilm);
 
         mPlaybackParameters = new PlaybackParameters(1f);

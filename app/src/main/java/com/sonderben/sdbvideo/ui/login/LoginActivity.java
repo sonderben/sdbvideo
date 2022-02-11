@@ -112,7 +112,7 @@ public class LoginActivity extends AppCompatActivity {
             loadingProgressBar.setVisibility(View.VISIBLE);
             login(usernameEditText.getText().toString(), passwordEditText.getText().toString(),
                     "device", "location");
-            LoginActivity.this.finishAffinity();
+            //LoginActivity.this.finishAffinity(); dwe nn yn kondisyon, depann d q aktivite q t kreyel
         });
         tempEmail=usernameEditText.getText().toString();
     }
