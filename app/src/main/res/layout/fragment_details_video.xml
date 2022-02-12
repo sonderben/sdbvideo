@@ -15,8 +15,6 @@
         app:resize_mode="fill"
         app:use_controller="false"
         app:player_layout_id="@layout/exo_player_view"
-        app:rewind_increment="1000"
-        app:fastforward_increment="1000"
         app:surface_type="surface_view"
         app:shutter_background_color="#000000"/>
     <androidx.core.widget.NestedScrollView

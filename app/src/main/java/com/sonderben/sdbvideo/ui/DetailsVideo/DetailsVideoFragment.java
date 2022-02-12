@@ -42,10 +42,9 @@ public class DetailsVideoFragment extends BottomSheetDialogFragment {
 
 
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     View root;
 
-    // TODO: Rename and change types of parameters
 
     private Video video;
 
@@ -58,7 +57,6 @@ public class DetailsVideoFragment extends BottomSheetDialogFragment {
         DetailsVideoFragment fragment = new DetailsVideoFragment();
         Bundle args = new Bundle();
         args.putSerializable(ARG_PARAM1,video);
-       // args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -68,7 +66,6 @@ public class DetailsVideoFragment extends BottomSheetDialogFragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             video = (Video) getArguments().getSerializable(ARG_PARAM1);
-           // mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
@@ -87,7 +84,6 @@ public class DetailsVideoFragment extends BottomSheetDialogFragment {
 
         play.setOnClickListener(x->{
             Intent intent=new Intent(getContext(), VideoPlayerActivity.class);
-            //String urlFilm=getIntent().getStringExtra("URL_FILM");
             intent.putExtra("URL_FILM",urlFilm);
             startActivity(intent);
         });
@@ -215,7 +211,6 @@ public class DetailsVideoFragment extends BottomSheetDialogFragment {
 
     @Override
     public void onResume() {
-        //Toast.makeText(DetailsVideoFragment.this.getContext(),"on resume",Toast.LENGTH_LONG).show();
         super.onResume();
     }
 }

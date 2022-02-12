@@ -33,6 +33,7 @@ import com.sonderben.sdbvideo.VideoPlayerActivity;
 import com.sonderben.sdbvideo.adapter.AdapterFilm4MainActivity;
 import com.sonderben.sdbvideo.adapter.AdapterViewPager4HomeFragment;
 import com.sonderben.sdbvideo.data.model.Category;
+import com.sonderben.sdbvideo.data.model.Subtitle;
 import com.sonderben.sdbvideo.data.model.Video;
 import com.sonderben.sdbvideo.databinding.FragmentHomeBinding;
 import com.sonderben.sdbvideo.databinding.FragmentListVideosBinding;
@@ -65,28 +66,16 @@ public class HomeFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                new ViewModelProvider(this.requireActivity()).get(HomeViewModel.class);
-
-         /*callback=new OnBackPressedCallback(true) {
-            @Override
-            public void handleOnBackPressed() {
-
-            }
-        };
-        requireActivity().getOnBackPressedDispatcher()
-                .addCallback(this.getActivity(), callback);*/
-
+        homeViewModel = new ViewModelProvider(this.requireActivity()).get(HomeViewModel.class);
 
         binding = FragmentHomeBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
         bodyLayout = binding.body;
         playerView = binding.playerView;
         scrollView = binding.scrollview;
         play = binding.play;
         mute = binding.mute;
-
-        suggestionFilm();
 
         scrollView.fullScroll(ScrollView.FOCUS_UP);
         scrollView.getViewTreeObserver().addOnScrollChangedListener(() -> {
@@ -97,60 +86,28 @@ public class HomeFragment extends Fragment {
             } else mSimpleExoPlayer.pause();
         });
 
-
-
-
-
-
+        suggestionFilm();
         getCategories();
 
-
-        for (int i = 2; i < recyclerViews.size(); i++) {
-           /* recyclerViews[i] = new RecyclerView(getContext());
-            textViews[i] = new TextView(getContext());
-
-
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lp.setMargins(20, 0, 0, 20);
-
-            textViews[i].setLayoutParams(lp);
-            textViews[i].setTypeface(null, Typeface.BOLD);
-            textViews[i].setTextSize(24);
-            textViews[i].setText("title " + i);
-            textViews[i].setTextColor(getResources().getColor(R.color.white));
-            bodyLayout.addView(textViews[i]);
-
-            LinearLayout.LayoutParams lpR = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-            lpR.setMargins(20, 0, 0, 20);
-            recyclerViews[i].setLayoutParams(lpR);
-            recyclerViews[i].setFocusable(false);
-            recyclerViews[i].setAdapter(adapterFilm4MainActivity[i]);
-            recyclerViews[i].setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-            bodyLayout.addView(recyclerViews[i]);*/
-        }
-
-
-
-
-
-
+        listsSubtitle.add(new Subtitle(null,"English",
+                "https://sdbvideo.s3.amazonaws.com/film/sub/Alger+pleur_en.srt",
+                null,"author"));
+        listsSubtitle.add(new Subtitle(null,"French",
+                "https://sdbvideo.s3.amazonaws.com/film/sub/algerie.srt","","author"));
+        listsSubtitle.add(new Subtitle(null,"Spanish","https://sdbvideo.s3.amazonaws.com/film/sub/Alger+pleur_es.srt",
+                null,"author"));
         return root;
     }
-    public void suggestionFilm() {
-        mSimpleExoPlayer = new SimpleExoPlayer.Builder(requireContext()).build();
-        String url = "https://sdbvideo.s3.amazonaws.com/film/El+Tiempo+Contigo+-+Tr%C3%A1iler+Oficial+(Sub.+Espa%C3%B1ol)+-+YouTube.mkv";
-        MediaItem mediaItem = new MediaItem.Builder()
-                .setUri(url)
-                .build();
-        mSimpleExoPlayer.setMediaItem(mediaItem);
-        playerView.setPlayer(mSimpleExoPlayer);
 
-        // mSimpleExoPlayer.prepare();
-        //mSimpleExoPlayer.setPlayWhenReady(true);
+    public void suggestionFilm() {
+        String urlFilm = "https://sdbvideo.s3.amazonaws.com/film/El+Tiempo+Contigo+-+Tr%C3%A1iler+Oficial+(Sub.+Espa%C3%B1ol)+-+YouTube.mkv";
+
+        mSimpleExoPlayer = Utils.playVideo(getContext(),playerView,mSimpleExoPlayer,urlFilm,null);
 
         play.setOnClickListener(i -> {
             Intent intent = new Intent(getContext(), VideoPlayerActivity.class);
-            intent.putExtra("URL_FILM", url);
+            intent.putExtra("URL_FILM", urlFilm);
+            intent.putExtra("LIST_SUBTITLE",listsSubtitle);
             startActivity(intent);
         });
         mute.setOnClickListener(x -> {
@@ -164,19 +121,20 @@ public class HomeFragment extends Fragment {
             }
         });
     }
-    public void getCategories(){
-        Retrofit retrofit= Utils.getInstanceRetrofit();
-        GeneralRepository repository=retrofit.create(GeneralRepository.class);
-        Call<List<Category>> categoryCall=repository.getCategories("Bearer "+preferences.getToken());
+
+    public void getCategories() {
+        Retrofit retrofit = Utils.getInstanceRetrofit();
+        GeneralRepository repository = retrofit.create(GeneralRepository.class);
+        Call<List<Category>> categoryCall = repository.getCategories("Bearer " + preferences.getToken());
         categoryCall.enqueue(new Callback<List<Category>>() {
             @Override
             public void onResponse(Call<List<Category>> call, Response<List<Category>> response) {
-                if(response.isSuccessful()){
-                    List<Category>categories=response.body();
+                if (response.isSuccessful()) {
+                    List<Category> categories = response.body();
 
-                    for (int i = 0; i < categories.size(); i++){
+                    for (int i = 0; i < categories.size(); i++) {
                         // new AlertDialog.Builder(HomeFragment.this.getContext()).setMessage(categories.get(i).getCode()+": "+categories.get(i).getName()).show();
-                        getVideosByCategory(categories.get(i).getCode(),categories.get(i).getName());
+                        getVideosByCategory(categories.get(i).getCode(), categories.get(i).getName());
                     }
 
                 }
@@ -189,23 +147,21 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    public void getVideosByCategory(int categoryCode,String categoryName){
-        Retrofit retrofit= Utils.getInstanceRetrofit();
-        GeneralRepository repository=retrofit.create(GeneralRepository.class);
-        Call<List<Video>>categoryCall=repository.getVideoByCategory(categoryCode,preferences.getIdProfile(),0,"Bearer "+preferences.getToken());
+    public void getVideosByCategory(int categoryCode, String categoryName) {
+        Retrofit retrofit = Utils.getInstanceRetrofit();
+        GeneralRepository repository = retrofit.create(GeneralRepository.class);
+        Call<List<Video>> categoryCall = repository.getVideoByCategory(categoryCode, preferences.getIdProfile(), 0, "Bearer " + preferences.getToken());
         categoryCall.enqueue(new Callback<List<Video>>() {
             @Override
             public void onResponse(Call<List<Video>> call, Response<List<Video>> response) {
 
-                if( response.isSuccessful()){
-                    List<Video>videos=response.body();
-                    if(videos.size()>0){
+                if (response.isSuccessful()) {
+                    List<Video> videos = response.body();
+                    if (videos.size() > 0) {
 
                         // new AlertDialog.Builder(HomeFragment.this.getContext()).setMessage(simpleFilms.get(0).getId()+" cool").show();
-                        TextView titleCategory=new TextView(HomeFragment.this.getContext());
+                        TextView titleCategory = new TextView(HomeFragment.this.getContext());
                         titleCategory.setText(categoryName);
-
-
 
 
                         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -221,25 +177,23 @@ public class HomeFragment extends Fragment {
                         bodyLayout.addView(titleCategory);
 
 
-
-                        RecyclerView recyclerView=new RecyclerView(HomeFragment.this.getContext());
+                        RecyclerView recyclerView = new RecyclerView(HomeFragment.this.getContext());
                         LinearLayout.LayoutParams lpR = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
                         lpR.setMargins(20, 0, 0, 20);
                         recyclerView.setLayoutParams(lpR);
                         recyclerView.setFocusable(false);
 
 
-                        AdapterFilm4MainActivity adapter=new AdapterFilm4MainActivity(videos,HomeFragment.this);
+                        AdapterFilm4MainActivity adapter = new AdapterFilm4MainActivity(videos, HomeFragment.this);
                         recyclerView.setAdapter(adapter);
                         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
                         bodyLayout.addView(recyclerView);
                     }
 
-                }
-                else {
+                } else {
                     try {
-                        String a=response.errorBody().string();
-                        new AlertDialog.Builder(HomeFragment.this.getContext()).setMessage(a+"no cool").show();
+                        String a = response.errorBody().string();
+                        new AlertDialog.Builder(HomeFragment.this.getContext()).setMessage(a + "no cool").show();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -249,7 +203,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<List<Video>> call, Throwable t) {
-                new AlertDialog.Builder(HomeFragment.this.getContext()).setMessage("failure: "+t.getMessage()).show();
+                new AlertDialog.Builder(HomeFragment.this.getContext()).setMessage("failure: " + t.getMessage()).show();
             }
         });
     }
@@ -260,7 +214,12 @@ public class HomeFragment extends Fragment {
     TextView mute;
     float currentVolume;
     ScrollView scrollView;
-    private final Preferences preferences= Preferences.getPreferenceInstance(this.getContext());
+    private final Preferences preferences = Preferences.getPreferenceInstance(this.getContext());
+    private LinearLayout bodyLayout;
+    private List<TextView> textViews = new ArrayList<>(10);
+    private List<AdapterFilm4MainActivity> adapterFilm4MainActivity = new ArrayList<>(10);
+    ArrayList<Subtitle>listsSubtitle=new ArrayList<>(3);
+    private MaterialButton play;
 
 
     @Override
@@ -280,8 +239,6 @@ public class HomeFragment extends Fragment {
         mSimpleExoPlayer.getPlaybackState();
     }
 
-
-
     @Override
     public void onStop() {
         super.onStop();
@@ -289,30 +246,11 @@ public class HomeFragment extends Fragment {
         mSimpleExoPlayer.stop();
     }
 
-
-
-    private LinearLayout bodyLayout;
-    private List<RecyclerView> recyclerViews=new ArrayList<>(10);
-    private List<TextView>textViews=new ArrayList<>(10);
-    private List<AdapterFilm4MainActivity> adapterFilm4MainActivity = new ArrayList<>(10);
-    private MaterialButton play;
-
-
-
-
-
-
-
-
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        binding=null;
+        binding = null;
     }
-
-
-
 
 
 }

@@ -14,8 +14,6 @@
     app:hide_on_touch="true"
     app:resize_mode="fill"
     app:player_layout_id="@layout/exo_player_view"
-    app:rewind_increment="1000"
-    app:fastforward_increment="1000"
     app:surface_type="surface_view"
     app:controller_layout_id="@layout/custom_playback_view"
     app:use_controller="true"

@@ -12,6 +12,8 @@
         android:text="Desactive"
         android:textSize="22sp"
         android:gravity="center"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
         android:textColor="@color/white"
         app:layout_constraintTop_toTopOf="parent"
        app:layout_constraintLeft_toLeftOf="parent"/>

@@ -1,8 +1,9 @@
 package com.sonderben.sdbvideo.data.model;
 
+import java.io.Serializable;
 import java.util.Calendar;
 
-public class Subtitle {
+public class Subtitle implements Serializable {
 
     Long id;
     String language;

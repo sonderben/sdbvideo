@@ -3,12 +3,31 @@ package com.sonderben.sdbvideo.utils;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Patterns;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
+
+import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.Format;
+import com.google.android.exoplayer2.MediaItem;
+import com.google.android.exoplayer2.Player;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.ConcatenatingMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.MergingMediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.source.SingleSampleMediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
+import com.google.android.exoplayer2.util.MimeTypes;
+import com.google.android.exoplayer2.util.Util;
+import com.sonderben.sdbvideo.VideoPlayerActivity;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -35,6 +54,64 @@ public class Utils {
     }
     public static volatile Retrofit retrofit;
     public static volatile Retrofit retrofit2;
+
+
+
+    public static SimpleExoPlayer playVideo(Context context, PlayerView mPlayerView, SimpleExoPlayer mSimpleExoPlayer, String film, String subtitle) {
+        Long currentPosition = null;
+        if (mSimpleExoPlayer != null) {
+            currentPosition = mSimpleExoPlayer.getCurrentPosition();
+            mSimpleExoPlayer.stop();
+            mSimpleExoPlayer.release();
+        }
+
+
+        mSimpleExoPlayer = new SimpleExoPlayer.Builder(context).build();
+        Uri uriVideo = Uri.parse(film);
+        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "app"));
+        ConcatenatingMediaSource mConcatenatingMediaSource = new ConcatenatingMediaSource();
+        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
+                .createMediaSource(Uri.parse(String.valueOf(uriVideo)));
+
+
+        if (subtitle != null && subtitle.length() > 10) {// verify also if is a valid url, don't forget{
+            Format format = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, Format.NO_VALUE, "fr");
+
+            MediaSource sourceSubtitle = new SingleSampleMediaSource.Factory(dataSourceFactory)
+                    .setTreatLoadErrorsAsEndOfStream(true).createMediaSource(Uri.parse(subtitle), format, C.TIME_UNSET);
+            MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSource, sourceSubtitle);
+
+
+
+
+
+
+
+            mConcatenatingMediaSource.addMediaSource(mergingMediaSource);
+        } else {
+            mConcatenatingMediaSource.addMediaSource(mediaSource);
+        }
+
+
+        mPlayerView.setPlayer(mSimpleExoPlayer);
+        mPlayerView.setKeepScreenOn(true);
+        mSimpleExoPlayer.prepare(mConcatenatingMediaSource);
+        if (currentPosition != null)
+            mSimpleExoPlayer.seekTo(0, currentPosition);
+        playError(mSimpleExoPlayer);
+        return mSimpleExoPlayer;
+
+    }
+    private static void playError(SimpleExoPlayer mSimpleExoPlayer) {
+        mSimpleExoPlayer.addListener(new Player.Listener() {
+            @Override
+            public void onPlayerError(ExoPlaybackException error) {
+                //Toast.makeText(VideoPlayerActivity.this, "error al leer video", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+    }
+
 
     public static void setVisibleChildGroup(View searchView, int visibility) {
         //searchView.setEnabled(b);

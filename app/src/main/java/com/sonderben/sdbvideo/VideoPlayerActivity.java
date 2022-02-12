@@ -3,6 +3,7 @@ package com.sonderben.sdbvideo;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,8 +32,9 @@ import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.sonderben.sdbvideo.adapter.AdapterEpo4PlayerView;
 import com.sonderben.sdbvideo.adapter.AdapterSubtitle4PlayerView;
+import com.sonderben.sdbvideo.data.model.Subtitle;
 import com.sonderben.sdbvideo.entity.Episode;
-import com.sonderben.sdbvideo.entity.Subtitle;
+
 import com.sonderben.sdbvideo.utils.Utils;
 
 import java.util.ArrayList;
@@ -58,8 +60,20 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         mEpo = findViewById(R.id.epo);
         mSubtitle = findViewById(R.id.sub);
 
-        String urlFilm=getIntent().getStringExtra("URL_FILM");
-        playVideo2(urlFilm);
+
+        urlFilm = getIntent().getStringExtra("URL_FILM");
+        subtitles = (ArrayList<Subtitle>) getIntent().getSerializableExtra("LIST_SUBTITLE");
+        urlSub = subtitles.get(1).getSubtitle();
+
+        if (subtitles == null || subtitles.size() == 0)
+            mSubtitle.setVisibility(View.GONE);
+
+
+
+
+
+        mSimpleExoPlayer= Utils.playVideo(this,  mPlayerView,  mSimpleExoPlayer,  urlFilm,  urlSub);
+
 
         mPlaybackParameters = new PlaybackParameters(1f);
         getWindowManager().getDefaultDisplay().getMetrics(mDisplayMetrics);
@@ -103,63 +117,15 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         });
     }
 
-   /* private void setFullScreen() {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-    }*/
-    private void playVideo2(String url) {
-        mSimpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
-        Uri uriVideo = Uri.parse(url);
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(
-                this, "app"
-        ));
-        mConcatenatingMediaSource = new ConcatenatingMediaSource();
-        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(String.valueOf(uriVideo)));
+    /* private void setFullScreen() {
+         requestWindowFeature(Window.FEATURE_NO_TITLE);
+         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+     }*/
 
 
-        mConcatenatingMediaSource.addMediaSource(mediaSource);
-
-        mPlayerView.setPlayer(mSimpleExoPlayer);
-        mPlayerView.setKeepScreenOn(true);
-        mSimpleExoPlayer.prepare(mConcatenatingMediaSource);
-        playError();
-    }
-    private void playVideo() {
-        mSimpleExoPlayer = new SimpleExoPlayer.Builder(this).build();
-        Uri uriVideo = Uri.parse("https://ejemploht.s3.us-east-2.amazonaws.com/M%C3%A9dine+-+Alger+Pleure.mkv");
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(this, Util.getUserAgent(
-                this, "app"
-        ));
-        mConcatenatingMediaSource = new ConcatenatingMediaSource();
-        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(String.valueOf(uriVideo)));
 
 
-        Format format = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, Format.NO_VALUE, "fr");
-        MediaSource sourceSubtitle = new SingleSampleMediaSource.Factory(dataSourceFactory)
-                .setTreatLoadErrorsAsEndOfStream(true).createMediaSource(Uri.parse("https://ejemploht.s3.us-east-2.amazonaws.com/algerie.srt"), format, C.TIME_UNSET);
-        MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSource, sourceSubtitle);
 
-        mConcatenatingMediaSource.addMediaSource(mergingMediaSource);
-        //mConcatenatingMediaSource.addMediaSou;
-        //mConcatenatingMediaSource.addMediaSource(mediaSource);
-
-        mPlayerView.setPlayer(mSimpleExoPlayer);
-        mPlayerView.setKeepScreenOn(true);
-        mSimpleExoPlayer.prepare(mConcatenatingMediaSource);
-        playError();
-    }
-
-    private void playError() {
-        mSimpleExoPlayer.addListener(new Player.Listener() {
-            @Override
-            public void onPlayerError(ExoPlaybackException error) {
-                Toast.makeText(VideoPlayerActivity.this, "error al leer video", Toast.LENGTH_SHORT).show();
-            }
-        });
-        mSimpleExoPlayer.setPlayWhenReady(true);
-    }
 
     @Override
     public void onBackPressed() {
@@ -272,7 +238,14 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
 
             episodeDialog().show();
         } else if (id == R.id.sub) {
-            subtitleDialog().show();
+            AlertDialog a = subtitleDialog();
+            a.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialogInterface) {
+                    mSimpleExoPlayer= Utils.playVideo(VideoPlayerActivity.this,  mPlayerView,  mSimpleExoPlayer,  urlFilm,  urlSub);
+                }
+            });
+            a.show();
         }
     }
 
@@ -350,25 +323,10 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
             alertDialog.cancel();
         });
 
-        List<Subtitle> subtitles = new ArrayList<>();
-
-
-        String lang[] = {"French", "Spanish", "English"};
-        String url[]={"https://ejemploht.s3.us-east-2.amazonaws.com/algerie.srt",
-        "https://ejemploht.s3.us-east-2.amazonaws.com/Alger+pleur_es.srt",
-        "https://ejemploht.s3.us-east-2.amazonaws.com/Alger+pleur_en.srt"};
-
-        for (int a = 0; a < 3; a++) {
-            if(a<3)
-            subtitles.add(new Subtitle(lang[a], url[a]));
-            else
-                subtitles.add(new Subtitle("autre", "1"));
-        }
-
 
         mListViewSubtitle = view.findViewById(R.id.listview_subtitle);
 
-        AdapterSubtitle4PlayerView adapter = new AdapterSubtitle4PlayerView(subtitles, VideoPlayerActivity.this,mConcatenatingMediaSource);
+        AdapterSubtitle4PlayerView adapter = new AdapterSubtitle4PlayerView(subtitles, VideoPlayerActivity.this);
         mListViewSubtitle.getSelectedItemPosition();
         mListViewSubtitle.setAdapter(adapter);
         return alertDialog;
@@ -377,7 +335,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     Thread mThread;
     SimpleExoPlayer mSimpleExoPlayer;
     PlayerView mPlayerView;
-    ConcatenatingMediaSource mConcatenatingMediaSource;
+
     ImageView mCloseActivity, mCloseSpeed;
     TextView mSpeed, mProgressSpeedLabel, mLock, mUnlock, mEpo, mSubtitle;
     ConstraintLayout mLayoutSpeed;
@@ -393,4 +351,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     DisplayMetrics mDisplayMetrics = new DisplayMetrics();
     int mHeightScreen;
     int mWidthScreen;
+    ArrayList<Subtitle> subtitles;
+    String urlFilm, urlSub;
+
 }
