@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.ui.PlayerView;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import retrofit2.Call;
@@ -94,15 +96,23 @@ public class HomeFragment extends Fragment {
                 null,"author"));
         listsSubtitle.add(new Subtitle(null,"French",
                 "https://sdbvideo.s3.amazonaws.com/film/sub/algerie.srt","","author"));
-        listsSubtitle.add(new Subtitle(null,"Spanish","https://sdbvideo.s3.amazonaws.com/film/sub/Alger+pleur_es.srt",
-                null,"author"));
+
         return root;
     }
 
     public void suggestionFilm() {
         String urlFilm = "https://sdbvideo.s3.amazonaws.com/film/El+Tiempo+Contigo+-+Tr%C3%A1iler+Oficial+(Sub.+Espa%C3%B1ol)+-+YouTube.mkv";
 
-        mSimpleExoPlayer = Utils.playVideo(getContext(),playerView,mSimpleExoPlayer,urlFilm,null);
+        mSimpleExoPlayer =new ExoPlayer.Builder(getContext()).build();
+        MediaItem mediaItem = new MediaItem.Builder()
+                .setUri(urlFilm)
+                //.setSubtitleConfigurations(Collections.singletonList(sub))
+                .build();
+        mSimpleExoPlayer.setMediaItem(mediaItem);
+        playerView.setPlayer(mSimpleExoPlayer);
+        mSimpleExoPlayer.setMediaItem(mediaItem);
+        mSimpleExoPlayer.prepare();
+        mSimpleExoPlayer.play();
 
         play.setOnClickListener(i -> {
             Intent intent = new Intent(getContext(), VideoPlayerActivity.class);
@@ -210,7 +220,7 @@ public class HomeFragment extends Fragment {
 
 
     PlayerView playerView;
-    SimpleExoPlayer mSimpleExoPlayer;
+    ExoPlayer mSimpleExoPlayer;
     TextView mute;
     float currentVolume;
     ScrollView scrollView;

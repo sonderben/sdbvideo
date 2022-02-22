@@ -4,7 +4,6 @@ package com.sonderben.sdbvideo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
@@ -25,11 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.*;
-import com.google.android.exoplayer2.source.*;
 import com.google.android.exoplayer2.ui.PlayerView;
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
-import com.google.android.exoplayer2.util.MimeTypes;
-import com.google.android.exoplayer2.util.Util;
 import com.sonderben.sdbvideo.adapter.AdapterEpo4PlayerView;
 import com.sonderben.sdbvideo.adapter.AdapterSubtitle4PlayerView;
 import com.sonderben.sdbvideo.data.model.Subtitle;
@@ -38,6 +33,7 @@ import com.sonderben.sdbvideo.entity.Episode;
 import com.sonderben.sdbvideo.utils.Utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class VideoPlayerActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
@@ -65,6 +61,17 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         subtitles = (ArrayList<Subtitle>) getIntent().getSerializableExtra("LIST_SUBTITLE");
         urlSub = subtitles.get(1).getSubtitle();
 
+        List<MediaItem.SubtitleConfiguration> subtitleConfigurations=new ArrayList<>();
+        for(int a=0;a<subtitles.size();a++){
+            subtitleConfigurations.add(Utils.createSubtitle(subtitles.get(a).getSubtitle(),subtitles.get(a).getLanguage()));
+        }
+
+        mediaItem= new MediaItem.Builder()
+                .setUri(urlFilm)
+                .setSubtitleConfigurations(subtitleConfigurations)
+
+                .build();
+
         if (subtitles == null || subtitles.size() == 0)
             mSubtitle.setVisibility(View.GONE);
 
@@ -72,7 +79,12 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
 
 
 
-        mSimpleExoPlayer= Utils.playVideo(this,  mPlayerView,  mSimpleExoPlayer,  urlFilm,  urlSub);
+
+        mExoplayer = new ExoPlayer.Builder(this).build();
+        mPlayerView.setPlayer(mExoplayer);
+        mExoplayer.setMediaItem(mediaItem);
+        mExoplayer.prepare();
+        mExoplayer.play();
 
 
         mPlaybackParameters = new PlaybackParameters(1f);
@@ -101,7 +113,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
                 mPlaybackParameters = new PlaybackParameters(mSpeedValue[i]);
-                mSimpleExoPlayer.setPlaybackParameters(mPlaybackParameters);
+                mExoplayer.setPlaybackParameters(mPlaybackParameters);
                 mProgressSpeedLabel.setText("" + mSpeedValue[i] + "X");
             }
 
@@ -131,8 +143,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     public void onBackPressed() {
         if (!mScreenIsLock) {
             super.onBackPressed();
-            if (mSimpleExoPlayer.isPlaying())
-                mSimpleExoPlayer.stop();
+            if (mExoplayer.isPlaying())
+                mExoplayer.stop();
         } else {
             Toast toast = Toast.makeText(VideoPlayerActivity.this, "You have to unlock the" +
                     " screen first, to do that action.", Toast.LENGTH_LONG);
@@ -144,30 +156,30 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     @Override
     protected void onPause() {
         super.onPause();
-        mSimpleExoPlayer.setPlayWhenReady(false);
-        mSimpleExoPlayer.getPlaybackState();
+        mExoplayer.setPlayWhenReady(false);
+        mExoplayer.getPlaybackState();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        mSimpleExoPlayer.setPlayWhenReady(true);
-        mSimpleExoPlayer.getPlaybackState();
+        mExoplayer.setPlayWhenReady(true);
+        mExoplayer.getPlaybackState();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        mSimpleExoPlayer.setPlayWhenReady(true);
-        mSimpleExoPlayer.getPlaybackState();
+        mExoplayer.setPlayWhenReady(true);
+        mExoplayer.getPlaybackState();
     }
 
     @Override
     public void onClick(View view) {
         int id = view.getId();
         if (id == R.id.exo_close) {
-            mSimpleExoPlayer.stop();
-            mSimpleExoPlayer.release();
+            mExoplayer.stop();
+            mExoplayer.release();
             finish();
         } else if (id == R.id.speed) {
             mLayoutSpeed.setVisibility(View.VISIBLE);
@@ -242,7 +254,8 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
             a.setOnCancelListener(new DialogInterface.OnCancelListener() {
                 @Override
                 public void onCancel(DialogInterface dialogInterface) {
-                    mSimpleExoPlayer= Utils.playVideo(VideoPlayerActivity.this,  mPlayerView,  mSimpleExoPlayer,  urlFilm,  urlSub);
+                    //mExoplayer = Utils.playVideo(VideoPlayerActivity.this,  mPlayerView, mExoplayer,  urlFilm,  urlSub);
+                   // mediaItem.set
                 }
             });
             a.show();
@@ -267,7 +280,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     }
 
     public AlertDialog episodeDialog() {
-        mSimpleExoPlayer.pause();
+        mExoplayer.pause();
         mCustomPlaybackView.setVisibility(View.INVISIBLE);
         AlertDialog.Builder dialodAddIncome = new AlertDialog.Builder(VideoPlayerActivity.this);
         AlertDialog alertDialog = dialodAddIncome.create();
@@ -279,7 +292,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         alertDialog.getWindow().setLayout((int) (mWidthScreen * 0.95f), (int) (mHeightScreen * 0.90f));
         alertDialog.setOnDismissListener(dialogInterface -> {
             mCustomPlaybackView.setVisibility(View.VISIBLE);
-            mSimpleExoPlayer.play();
+            mExoplayer.play();
         });
 
         view.findViewById(R.id.close).setOnClickListener(x -> {
@@ -305,7 +318,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     }
 
     public AlertDialog subtitleDialog() {
-        mSimpleExoPlayer.pause();
+        mExoplayer.pause();
         mCustomPlaybackView.setVisibility(View.INVISIBLE);
         AlertDialog.Builder dialodAddIncome = new AlertDialog.Builder(VideoPlayerActivity.this);
         AlertDialog alertDialog = dialodAddIncome.create();
@@ -316,7 +329,7 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
         alertDialog.getWindow().setLayout((int) (mWidthScreen * 0.95f), (int) (mHeightScreen * 0.90f));
         alertDialog.setOnDismissListener(dialogInterface -> {
             mCustomPlaybackView.setVisibility(View.VISIBLE);
-            mSimpleExoPlayer.play();
+            mExoplayer.play();
         });
 
         view.findViewById(R.id.close).setOnClickListener(x -> {
@@ -333,8 +346,9 @@ public class VideoPlayerActivity extends AppCompatActivity implements View.OnCli
     }
 
     Thread mThread;
-    SimpleExoPlayer mSimpleExoPlayer;
+    ExoPlayer mExoplayer;
     PlayerView mPlayerView;
+    MediaItem mediaItem;
 
     ImageView mCloseActivity, mCloseSpeed;
     TextView mSpeed, mProgressSpeedLabel, mLock, mUnlock, mEpo, mSubtitle;

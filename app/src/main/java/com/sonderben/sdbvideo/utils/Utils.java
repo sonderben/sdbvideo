@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlaybackException;
+import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.Format;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.Player;
@@ -28,6 +29,7 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory;
 import com.google.android.exoplayer2.util.MimeTypes;
 import com.google.android.exoplayer2.util.Util;
 import com.sonderben.sdbvideo.VideoPlayerActivity;
+import com.sonderben.sdbvideo.data.model.Subtitle;
 
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -57,58 +59,25 @@ public class Utils {
 
 
 
-    public static SimpleExoPlayer playVideo(Context context, PlayerView mPlayerView, SimpleExoPlayer mSimpleExoPlayer, String film, String subtitle) {
-        Long currentPosition = null;
-        if (mSimpleExoPlayer != null) {
-            currentPosition = mSimpleExoPlayer.getCurrentPosition();
-            mSimpleExoPlayer.stop();
-            mSimpleExoPlayer.release();
-        }
 
+    public static MediaItem.SubtitleConfiguration createSubtitle(String urlSubtitle,String language){
+        String urlSub = "https://sdbvideo.s3.amazonaws.com/film/sub/algerie.srt";
 
-        mSimpleExoPlayer = new SimpleExoPlayer.Builder(context).build();
-        Uri uriVideo = Uri.parse(film);
-        DefaultDataSourceFactory dataSourceFactory = new DefaultDataSourceFactory(context, Util.getUserAgent(context, "app"));
-        ConcatenatingMediaSource mConcatenatingMediaSource = new ConcatenatingMediaSource();
-        MediaSource mediaSource = new ProgressiveMediaSource.Factory(dataSourceFactory)
-                .createMediaSource(Uri.parse(String.valueOf(uriVideo)));
-
-
-        if (subtitle != null && subtitle.length() > 10) {// verify also if is a valid url, don't forget{
-            Format format = Format.createTextSampleFormat(null, MimeTypes.APPLICATION_SUBRIP, Format.NO_VALUE, "fr");
-
-            MediaSource sourceSubtitle = new SingleSampleMediaSource.Factory(dataSourceFactory)
-                    .setTreatLoadErrorsAsEndOfStream(true).createMediaSource(Uri.parse(subtitle), format, C.TIME_UNSET);
-            MergingMediaSource mergingMediaSource = new MergingMediaSource(mediaSource, sourceSubtitle);
-
-
-
-
-
-
-
-            mConcatenatingMediaSource.addMediaSource(mergingMediaSource);
-        } else {
-            mConcatenatingMediaSource.addMediaSource(mediaSource);
-        }
-
-
-        mPlayerView.setPlayer(mSimpleExoPlayer);
-        mPlayerView.setKeepScreenOn(true);
-        mSimpleExoPlayer.prepare(mConcatenatingMediaSource);
-        if (currentPosition != null)
-            mSimpleExoPlayer.seekTo(0, currentPosition);
-        playError(mSimpleExoPlayer);
-        return mSimpleExoPlayer;
+            return  new MediaItem.SubtitleConfiguration.Builder(
+                        Uri.parse(urlSubtitle))
+                        .setMimeType(MimeTypes.APPLICATION_SUBRIP)
+                        .setLanguage(language)
+                        .setSelectionFlags(C.SELECTION_FLAG_DEFAULT)
+                        .build();
 
     }
-    private static void playError(SimpleExoPlayer mSimpleExoPlayer) {
-        mSimpleExoPlayer.addListener(new Player.Listener() {
+    private static void playError(ExoPlayer mSimpleExoPlayer) {
+       /* mSimpleExoPlayer.addListener(new Player.Listener() {
             @Override
             public void onPlayerError(ExoPlaybackException error) {
                 //Toast.makeText(VideoPlayerActivity.this, "error al leer video", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
 
     }
 
